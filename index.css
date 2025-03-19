@@ -1380,7 +1380,7 @@ footer {
     width: 10px;
     height: 10px;
     border-bottom: 2px solid var(--primary-color);
-    border-right: 2px solid var (--primary-color);
+    border-right: 2px solid var(--primary-color);
     transform: rotate(45deg);
     margin: -5px;
     animation: arrows 2s infinite;
@@ -1630,4 +1630,81 @@ html[dir="rtl"] .skill-category h3::before {
 html[dir="rtl"] .contact-item i {
     margin-right: 0;
     margin-left: 1rem;
+}
+
+/* Enhanced RTL Support */
+html[dir="rtl"] {
+    /* RTL specific text alignment fixes */
+    text-align: right;
+}
+
+/* Fix RTL support for specific elements */
+html[dir="rtl"] .skill-item,
+html[dir="rtl"] .about-text,
+html[dir="rtl"] .about-details,
+html[dir="rtl"] .project-info,
+html[dir="rtl"] .contact-info,
+html[dir="rtl"] .contact-form {
+    text-align: right;
+}
+
+html[dir="rtl"] .section-title::after {
+    margin: 0.7rem auto;
+}
+
+html[dir="rtl"] .contact-item {
+    flex-direction: row-reverse;
+}
+
+html[dir="rtl"] nav ul li a::after {
+    left: auto;
+    right: 0;
+}
+
+html[dir="rtl"] .primary-btn::before {
+    left: auto;
+    right: -100%;
+}
+
+html[dir="rtl"] .primary-btn:hover::before {
+    right: 100%;
+    left: auto;
+}
+
+html[dir="rtl"] .logo h1::before {
+    left: auto;
+    right: -100%;
+}
+
+@keyframes rtl-shine {
+    0% { right: -100%; }
+    100% { right: 200%; }
+}
+
+html[dir="rtl"] .logo h1::before {
+    animation: rtl-shine 3s infinite;
+}
+
+/* Make language toggle more consistent */
+.language-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+html[dir="rtl"] .language-toggle {
+    left: 20px;
+    right: auto;
+}
+
+/* Add padding to avoid overlap of language and theme toggles on small screens */
+@media (max-width: 768px) {
+    .language-toggle {
+        top: 80px;
+    }
+    
+    html[dir="rtl"] .language-toggle {
+        top: 80px;
+    }
 }

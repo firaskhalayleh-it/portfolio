@@ -1,5 +1,157 @@
 // JavaScript for Portfolio Website
 
+// Add translations object
+const translations = {
+    en: {
+        // Navigation
+        navHome: "Home",
+        navAbout: "About",
+        navSkills: "Skills",
+        navProjects: "Projects",
+        navContact: "Contact",
+        
+        // Hero Section
+        heroGreeting: "Hello, I'm",
+        heroRoles: [
+            "System Administrator",
+            "Software Engineer",
+            "Flutter Developer",
+            "Node.js Developer",
+            "Cloud Infrastructure Specialist"
+        ],
+        heroDescription: "Specializing in mobile development, backend systems, and cloud infrastructure",
+        heroBtn1: "View My Work",
+        heroBtn2: "Contact Me",
+        
+        // About Section
+        aboutTitle: "About Me",
+        aboutText1: "As a System Administrator & Software Engineer with experience at Spinel Technology, I specialize in developing robust applications and managing complex system infrastructures. My expertise spans mobile development with Flutter, backend systems with Node.js, and database management across various platforms.",
+        aboutText2: "I've successfully managed projects for clients like the National Insurance Company (NIC) and Istishari Arab Hospital (IAH), developing dynamic tools and integrating solutions that enhance operational efficiency.",
+        aboutText3: "My approach combines technical expertise with creative problem-solving, focusing on delivering scalable and user-friendly solutions for complex business needs.",
+        aboutExperience: "Experience",
+        aboutExperienceText: "1 year at Spinel Technology",
+        aboutEducation: "Education",
+        aboutEducationText: "Computer Science Degree",
+        aboutLanguages: "Languages",
+        aboutLanguagesText: "Arabic (Native), English (Professional)",
+        aboutLocation: "Location",
+        aboutLocationText: "Palestine",
+        
+        // Skills Section
+        skillsTitle: "My Skills",
+        skillsMobile: "Mobile Development",
+        skillsBackend: "Backend & Database",
+        skillsSystem: "System & Cloud",
+        skillsProgramming: "Programming & Tools",
+        
+        // Projects Section
+        projectsTitle: "My Projects",
+        projectsAll: "All",
+        projectsMobile: "Mobile",
+        projectsWeb: "Web",
+        projectsBackend: "Backend",
+        projectERPTitle: "Mobile ERP System",
+        projectERPDesc: "Led the development of a comprehensive mobile ERP system at Spinel Technology, handling business logic, design integration, and ensuring seamless user experience.",
+        projectEcommerceTitle: "Fantasize E-commerce",
+        projectEcommerceDesc: "Graduation project featuring an e-commerce application built with Flutter, focusing on dynamic customization features for products and packages with high performance and scalability.",
+        projectPOSTitle: "Advanced POS System",
+        projectPOSDesc: "Developed a tablet-compatible POS and multi-standard accounting system using Flutter, Node.js, Python and PostgreSQL with advanced features like product key generation, QR codes, and transaction forecasting algorithms.",
+        projectDetailsBtn: "Details",
+        projectCodeBtn: "Code",
+        
+        // Contact Section
+        contactTitle: "Get In Touch",
+        contactInfoTitle: "Contact Information",
+        contactInfoText: "Feel free to reach out to me for collaborations or inquiries about system administration, software development, or mobile applications.",
+        contactFormTitle: "Send Me a Message",
+        contactNamePlaceholder: "Your Name",
+        contactEmailPlaceholder: "Your Email",
+        contactSubjectPlaceholder: "Subject",
+        contactMessagePlaceholder: "Your Message",
+        contactSendBtn: "Send Message",
+        
+        // Footer
+        footerRights: "All Rights Reserved.",
+        
+        // Language Switch
+        switchToArabic: "عربي"
+    },
+    ar: {
+        // Navigation
+        navHome: "الرئيسية",
+        navAbout: "عني",
+        navSkills: "المهارات",
+        navProjects: "المشاريع",
+        navContact: "اتصل بي",
+        
+        // Hero Section
+        heroGreeting: "مرحباً، أنا",
+        heroRoles: [
+            "مدير أنظمة",
+            "مهندس برمجيات",
+            "مطور فلاتر",
+            "مطور نود.جي إس",
+            "متخصص البنية التحتية السحابية"
+        ],
+        heroDescription: "متخصص في تطوير تطبيقات الجوال وأنظمة الخلفية والبنية التحتية السحابية",
+        heroBtn1: "عرض أعمالي",
+        heroBtn2: "اتصل بي",
+        
+        // About Section
+        aboutTitle: "نبذة عني",
+        aboutText1: "كمدير أنظمة ومهندس برمجيات بخبرة في شركة Spinel Technology، أتخصص في تطوير تطبيقات قوية وإدارة بنى تحتية معقدة للأنظمة. تشمل خبرتي تطوير تطبيقات الجوال باستخدام Flutter، وأنظمة الخلفية باستخدام Node.js، وإدارة قواعد البيانات عبر منصات متعددة.",
+        aboutText2: "نجحت في إدارة مشاريع لعملاء مثل شركة التأمين الوطنية (NIC) ومستشفى الاستشاري العربي (IAH)، حيث قمت بتطوير أدوات ديناميكية ودمج حلول تعزز كفاءة العمليات.",
+        aboutText3: "يجمع نهجي بين الخبرة التقنية وحل المشكلات بطريقة إبداعية، مع التركيز على تقديم حلول قابلة للتطوير وسهلة الاستخدام للاحتياجات التجارية المعقدة.",
+        aboutExperience: "الخبرة",
+        aboutExperienceText: "سنة واحدة في Spinel Technology",
+        aboutEducation: "التعليم",
+        aboutEducationText: "شهادة في علوم الكمبيوتر",
+        aboutLanguages: "اللغات",
+        aboutLanguagesText: "العربية (اللغة الأم)، الإنجليزية (مستوى متقدم)",
+        aboutLocation: "الموقع",
+        aboutLocationText: "فلسطين",
+        
+        // Skills Section
+        skillsTitle: "مهاراتي",
+        skillsMobile: "تطوير تطبيقات الجوال",
+        skillsBackend: "الخلفية وقواعد البيانات",
+        skillsSystem: "الأنظمة والسحابة",
+        skillsProgramming: "البرمجة والأدوات",
+        
+        // Projects Section
+        projectsTitle: "مشاريعي",
+        projectsAll: "الكل",
+        projectsMobile: "الجوال",
+        projectsWeb: "الويب",
+        projectsBackend: "الخلفية",
+        projectERPTitle: "نظام ERP للجوال",
+        projectERPDesc: "قدت تطوير نظام ERP شامل للهواتف المحمولة في Spinel Technology، حيث تعاملت مع منطق الأعمال، ودمج التصميم، وضمان تجربة مستخدم سلسة.",
+        projectEcommerceTitle: "منصة التجارة الإلكترونية Fantasize",
+        projectEcommerceDesc: "مشروع تخرج يتضمن تطبيق تجارة إلكترونية مبني بواسطة Flutter، يركز على ميزات التخصيص الديناميكية للمنتجات والحزم مع أداء عالي وقابلية للتوسع.",
+        projectPOSTitle: "نظام نقاط بيع متقدم",
+        projectPOSDesc: "قمت بتطوير نظام نقاط بيع ومحاسبة متعدد المعايير متوافق مع الأجهزة اللوحية باستخدام Flutter وNode.js وPython وPostgreSQL مع ميزات متقدمة مثل إنشاء مفاتيح المنتجات ورموز QR وخوارزميات توقع المعاملات.",
+        projectDetailsBtn: "التفاصيل",
+        projectCodeBtn: "الكود",
+        
+        // Contact Section
+        contactTitle: "تواصل معي",
+        contactInfoTitle: "معلومات الاتصال",
+        contactInfoText: "لا تتردد في التواصل معي للتعاون أو الاستفسارات حول إدارة الأنظمة، تطوير البرمجيات، أو تطبيقات الجوال.",
+        contactFormTitle: "أرسل لي رسالة",
+        contactNamePlaceholder: "الاسم",
+        contactEmailPlaceholder: "البريد الإلكتروني",
+        contactSubjectPlaceholder: "الموضوع",
+        contactMessagePlaceholder: "رسالتك",
+        contactSendBtn: "إرسال الرسالة",
+        
+        // Footer
+        footerRights: "جميع الحقوق محفوظة.",
+        
+        // Language Switch
+        switchToArabic: "English"
+    }
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     // Show loading screen
     const loadingScreen = document.querySelector('.loading-screen');
@@ -71,6 +223,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Initialize skill bars animation
         animateSkillBars();
+        
+        // Initialize language toggle
+        initLanguageToggle();
     });
 });
 
@@ -728,4 +883,300 @@ function isElementInViewport(el) {
         rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
         rect.bottom >= 0
     );
+}
+
+// Language toggle functionality
+function initLanguageToggle() {
+    const langBtn = document.getElementById('language-switch');
+    if (!langBtn) return;
+    
+    // Check for saved language preference
+    const savedLang = localStorage.getItem('language') || 'en';
+    
+    // Apply saved language
+    setLanguage(savedLang);
+    
+    // Listen for language toggle
+    langBtn.addEventListener('click', function() {
+        const currentLang = document.documentElement.lang;
+        const newLang = currentLang === 'en' ? 'ar' : 'en';
+        
+        setLanguage(newLang);
+        localStorage.setItem('language', newLang);
+    });
+}
+
+// Set language for the entire site
+function setLanguage(lang) {
+    // Set HTML lang and dir attributes
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    
+    // Update language toggle button text
+    const langBtn = document.getElementById('language-switch');
+    const langText = document.querySelector('.lang-text');
+    if (langText) {
+        langText.textContent = lang === 'en' ? translations.en.switchToArabic : translations.ar.switchToArabic;
+    }
+    
+    // Update navigation items
+    updateNavigation(lang);
+    
+    // Update hero section
+    updateHeroSection(lang);
+    
+    // Update about section
+    updateAboutSection(lang);
+    
+    // Update skills section
+    updateSkillsSection(lang);
+    
+    // Update projects section
+    updateProjectsSection(lang);
+    
+    // Update contact section
+    updateContactSection(lang);
+    
+    // Update footer
+    updateFooter(lang);
+    
+    // If typed text is active, reinitialize it
+    reinitializeTypedText(lang);
+}
+
+// Update navigation items with translated text
+function updateNavigation(lang) {
+    const homeLink = document.querySelector('nav a[href="#home"]');
+    const aboutLink = document.querySelector('nav a[href="#about"]');
+    const skillsLink = document.querySelector('nav a[href="#skills"]');
+    const projectsLink = document.querySelector('nav a[href="#projects"]');
+    const contactLink = document.querySelector('nav a[href="#contact"]');
+    
+    if (homeLink) homeLink.textContent = translations[lang].navHome;
+    if (aboutLink) aboutLink.textContent = translations[lang].navAbout;
+    if (skillsLink) skillsLink.textContent = translations[lang].navSkills;
+    if (projectsLink) projectsLink.textContent = translations[lang].navProjects;
+    if (contactLink) contactLink.textContent = translations[lang].navContact;
+}
+
+// Update hero section with translated text
+function updateHeroSection(lang) {
+    const heroGreeting = document.querySelector('.hero-content h2');
+    const heroDesc = document.querySelector('.hero-content p');
+    const viewWorkBtn = document.querySelector('.hero-content .primary-btn');
+    const contactBtn = document.querySelector('.hero-content .secondary-btn');
+    
+    if (heroGreeting) {
+        const nameSpan = heroGreeting.querySelector('.highlight');
+        const name = nameSpan ? nameSpan.textContent : 'Firas Khalayleh';
+        heroGreeting.innerHTML = `${translations[lang].heroGreeting} <span class="highlight">${name}</span>`;
+    }
+    
+    if (heroDesc) heroDesc.textContent = translations[lang].heroDescription;
+    if (viewWorkBtn) viewWorkBtn.textContent = translations[lang].heroBtn1;
+    if (contactBtn) contactBtn.textContent = translations[lang].heroBtn2;
+    
+    // Update global roles array for typed text
+    window.typedRoles = translations[lang].heroRoles;
+}
+
+// Reinitialize typed text effect with new language
+function reinitializeTypedText(lang) {
+    const typedElement = document.querySelector('.typed-text');
+    if (!typedElement) return;
+    
+    // Clear existing text and animation
+    typedElement.textContent = '';
+    
+    // Set up new roles
+    window.typedRoles = translations[lang].heroRoles;
+    
+    // Reset variables for typing effect
+    window.roleIndex = 0;
+    window.charIndex = 0;
+    window.isDeleting = false;
+    window.typeDelay = 150;
+    
+    // Restart typing effect
+    setTimeout(typeEffect, 500);
+}
+
+// Modified typing effect function to use global variables
+function typeEffect() {
+    if (!window.typedRoles) return;
+    
+    const typedElement = document.querySelector('.typed-text');
+    if (!typedElement) return;
+    
+    const currentRole = window.typedRoles[window.roleIndex];
+    
+    if (window.isDeleting) {
+        typedElement.textContent = currentRole.substring(0, window.charIndex - 1);
+        window.charIndex--;
+        window.typeDelay = 50;
+    } else {
+        typedElement.textContent = currentRole.substring(0, window.charIndex + 1);
+        window.charIndex++;
+        window.typeDelay = 150;
+    }
+    
+    if (!window.isDeleting && window.charIndex === currentRole.length) {
+        window.isDeleting = true;
+        window.typeDelay = 1500; // Pause at complete word
+    } else if (window.isDeleting && window.charIndex === 0) {
+        window.isDeleting = false;
+        window.roleIndex = (window.roleIndex + 1) % window.typedRoles.length;
+        window.typeDelay = 500; // Pause before typing next word
+    }
+    
+    setTimeout(typeEffect, window.typeDelay);
+}
+
+// Update other sections with translated text (implementation details)
+function updateAboutSection(lang) {
+    const aboutTitle = document.querySelector('#about .section-title');
+    const aboutTexts = document.querySelectorAll('#about .about-text p');
+    const detailTitles = document.querySelectorAll('#about .detail-item h3');
+    const detailTexts = document.querySelectorAll('#about .detail-item p');
+    
+    if (aboutTitle) aboutTitle.textContent = translations[lang].aboutTitle;
+    
+    if (aboutTexts.length >= 3) {
+        aboutTexts[0].textContent = translations[lang].aboutText1;
+        aboutTexts[1].textContent = translations[lang].aboutText2;
+        aboutTexts[2].textContent = translations[lang].aboutText3;
+    }
+    
+    if (detailTitles.length >= 4 && detailTexts.length >= 4) {
+        detailTitles[0].textContent = translations[lang].aboutExperience;
+        detailTexts[0].textContent = translations[lang].aboutExperienceText;
+        
+        detailTitles[1].textContent = translations[lang].aboutEducation;
+        detailTexts[1].textContent = translations[lang].aboutEducationText;
+        
+        detailTitles[2].textContent = translations[lang].aboutLanguages;
+        detailTexts[2].textContent = translations[lang].aboutLanguagesText;
+        
+        detailTitles[3].textContent = translations[lang].aboutLocation;
+        detailTexts[3].textContent = translations[lang].aboutLocationText;
+    }
+}
+
+// Update skills section with translated text
+function updateSkillsSection(lang) {
+    // Main title
+    const skillsTitle = document.querySelector('#skills .section-title');
+    if (skillsTitle) skillsTitle.textContent = translations[lang].skillsTitle;
+    
+    // Category titles
+    const categoryTitles = document.querySelectorAll('#skills .skill-category h3');
+    if (categoryTitles.length >= 4) {
+        categoryTitles[0].textContent = translations[lang].skillsMobile;
+        categoryTitles[1].textContent = translations[lang].skillsBackend;
+        categoryTitles[2].textContent = translations[lang].skillsSystem;
+        categoryTitles[3].textContent = translations[lang].skillsProgramming;
+    }
+}
+
+// Update projects section with translated text
+function updateProjectsSection(lang) {
+    // Main title
+    const projectsTitle = document.querySelector('#projects .section-title');
+    if (projectsTitle) projectsTitle.textContent = translations[lang].projectsTitle;
+    
+    // Filter buttons
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    if (filterBtns.length >= 4) {
+        const spans = document.querySelectorAll('.filter-btn span');
+        if (spans.length >= 4) {
+            spans[0].textContent = translations[lang].projectsAll;
+            spans[1].textContent = translations[lang].projectsMobile;
+            spans[2].textContent = translations[lang].projectsWeb;
+            spans[3].textContent = translations[lang].projectsBackend;
+        }
+    }
+    
+    // Project cards
+    const projectCards = document.querySelectorAll('.project-card');
+    if (projectCards.length >= 3) {
+        // First project - ERP
+        const title1 = projectCards[0].querySelector('h3');
+        const desc1 = projectCards[0].querySelector('p');
+        const btns1 = projectCards[0].querySelectorAll('.small-btn');
+        
+        if (title1) title1.textContent = translations[lang].projectERPTitle;
+        if (desc1) desc1.textContent = translations[lang].projectERPDesc;
+        if (btns1.length >= 2) {
+            btns1[0].innerHTML = `<i class="fas fa-globe"></i> ${translations[lang].projectDetailsBtn}`;
+            btns1[1].innerHTML = `<i class="fab fa-github"></i> ${translations[lang].projectCodeBtn}`;
+        }
+        
+        // Second project - E-commerce
+        const title2 = projectCards[1].querySelector('h3');
+        const desc2 = projectCards[1].querySelector('p');
+        const btns2 = projectCards[1].querySelectorAll('.small-btn');
+        
+        if (title2) title2.textContent = translations[lang].projectEcommerceTitle;
+        if (desc2) desc2.textContent = translations[lang].projectEcommerceDesc;
+        if (btns2.length >= 2) {
+            btns2[0].innerHTML = `<i class="fas fa-globe"></i> ${translations[lang].projectDetailsBtn}`;
+            btns2[1].innerHTML = `<i class="fab fa-github"></i> ${translations[lang].projectCodeBtn}`;
+        }
+        
+        // Third project - POS
+        const title3 = projectCards[2].querySelector('h3');
+        const desc3 = projectCards[2].querySelector('p');
+        const btns3 = projectCards[2].querySelectorAll('.small-btn');
+        
+        if (title3) title3.textContent = translations[lang].projectPOSTitle;
+        if (desc3) desc3.textContent = translations[lang].projectPOSDesc;
+        if (btns3.length >= 2) {
+            btns3[0].innerHTML = `<i class="fas fa-globe"></i> ${translations[lang].projectDetailsBtn}`;
+            btns3[1].innerHTML = `<i class="fab fa-github"></i> ${translations[lang].projectCodeBtn}`;
+        }
+    }
+}
+
+// Update contact section with translated text
+function updateContactSection(lang) {
+    const contactTitle = document.querySelector('#contact .section-title');
+    const contactInfoTitle = document.querySelector('.contact-info h3');
+    const contactInfoText = document.querySelector('.contact-info > p');
+    const contactFormTitle = document.querySelector('.contact-form h3');
+    const nameInput = document.querySelector('#name');
+    const emailInput = document.querySelector('#email');
+    const subjectInput = document.querySelector('#subject');
+    const messageInput = document.querySelector('#message');
+    const sendBtn = document.querySelector('.contact-form .primary-btn');
+    
+    if (contactTitle) contactTitle.textContent = translations[lang].contactTitle;
+    if (contactInfoTitle) contactInfoTitle.textContent = translations[lang].contactInfoTitle;
+    if (contactInfoText) contactInfoText.textContent = translations[lang].contactInfoText;
+    if (contactFormTitle) contactFormTitle.textContent = translations[lang].contactFormTitle;
+    
+    if (nameInput) nameInput.placeholder = translations[lang].contactNamePlaceholder;
+    if (emailInput) emailInput.placeholder = translations[lang].contactEmailPlaceholder;
+    if (subjectInput) subjectInput.placeholder = translations[lang].contactSubjectPlaceholder;
+    if (messageInput) messageInput.placeholder = translations[lang].contactMessagePlaceholder;
+    
+    if (sendBtn) sendBtn.textContent = translations[lang].contactSendBtn;
+}
+
+// Update footer with translated text
+function updateFooter(lang) {
+    const copyright = document.querySelector('.footer-content p');
+    if (copyright) {
+        const year = new Date().getFullYear();
+        copyright.textContent = `© ${year} My Portfolio. ${translations[lang].footerRights}`;
+    }
+    
+    // Footer navigation links - reuse the navigation translation
+    const footerLinks = document.querySelectorAll('.footer-links a');
+    if (footerLinks.length >= 5) {
+        footerLinks[0].textContent = translations[lang].navHome;
+        footerLinks[1].textContent = translations[lang].navAbout;
+        footerLinks[2].textContent = translations[lang].navSkills;
+        footerLinks[3].textContent = translations[lang].navProjects;
+        footerLinks[4].textContent = translations[lang].navContact;
+    }
 }

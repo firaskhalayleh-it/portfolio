@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize semantic aria states for tab interface
     initAccessibility();
     
-    // Initialize mobile menu
+    // Initialize mobile menu - ensure this runs immediately
     initMobileMenu();
     
     // Show loading screen
@@ -1024,7 +1024,7 @@ function setLanguage(lang) {
     // Update language toggle button text
     const langText = document.querySelector('.lang-text');
     if (langText) {
-        langText.textContent = lang === 'en' ? translations.en.switchToArabic : translations.ar.switchToArabic;
+        langText.textContent = lang === 'en' ? translations.en.switchToArabic : translations[lang].switchToArabic;
     }
     
     // Update all content with translated text
@@ -1574,15 +1574,22 @@ function resetAnimations() {
 
 // Add mobile navigation functionality
 function initMobileMenu() {
+    console.log('Initializing mobile menu');
+    
     const menuToggle = document.querySelector('.mobile-menu-toggle');
     const mobileNav = document.querySelector('.mobile-nav');
     const overlay = document.querySelector('.mobile-menu-overlay');
-    const mobileNavLinks = document.querySelectorAll('.mobile-nav a');
     
-    if (!menuToggle || !mobileNav || !overlay) return;
+    if (!menuToggle || !mobileNav || !overlay) {
+        console.error('Mobile menu elements not found');
+        return;
+    }
     
     // Toggle mobile menu when hamburger is clicked
-    menuToggle.addEventListener('click', function() {
+    menuToggle.addEventListener('click', function(e) {
+        console.log('Mobile menu toggle clicked');
+        e.preventDefault(); // Prevent any default behavior
+        
         mobileNav.classList.toggle('active');
         overlay.classList.toggle('active');
         
@@ -1590,23 +1597,29 @@ function initMobileMenu() {
         const isExpanded = mobileNav.classList.contains('active');
         menuToggle.setAttribute('aria-expanded', isExpanded);
         
-        // Animate hamburger icon
+        // Get RTL status
+        const isRTL = document.documentElement.dir === 'rtl';
+        
+        // Animate hamburger icon based on RTL status
         const spans = this.querySelectorAll('span');
         if (isExpanded) {
-            spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-            spans[1].style.opacity = '0';
-            spans[2].style.transform = 'rotate(-45deg) translate(7px, -7px)';
+            if (isRTL) {
+                spans[0].style.transform = 'rotate(-45deg) translate(-5px, 5px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(45deg) translate(-7px, -7px)';
+            } else {
+                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(-45deg) translate(7px, -7px)';
+            }
         } else {
             spans[0].style.transform = 'none';
             spans[1].style.opacity = '1';
             spans[2].style.transform = 'none';
         }
         
-        // Handle RTL transformations
-        if (document.documentElement.dir === 'rtl' && isExpanded) {
-            spans[0].style.transform = 'rotate(-45deg) translate(-5px, 5px)';
-            spans[2].style.transform = 'rotate(45deg) translate(-7px, -7px)';
-        }
+        // Stop event propagation to prevent document click handler from firing
+        e.stopPropagation();
     });
     
     // Close mobile menu when overlay is clicked
@@ -1617,12 +1630,14 @@ function initMobileMenu() {
         
         // Reset hamburger icon
         const spans = menuToggle.querySelectorAll('span');
-        spans[0].style.transform = 'none';
-        spans[1].style.opacity = '1';
-        spans[2].style.transform = 'none';
+        spans.forEach(span => {
+            span.style.transform = 'none';
+            span.style.opacity = '1';
+        });
     });
     
     // Close mobile menu when a nav link is clicked
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav a');
     mobileNavLinks.forEach(link => {
         link.addEventListener('click', function() {
             mobileNav.classList.remove('active');
@@ -1631,11 +1646,25 @@ function initMobileMenu() {
             
             // Reset hamburger icon
             const spans = menuToggle.querySelectorAll('span');
-            spans[0].style.transform = 'none';
-            spans[1].style.opacity = '1';
-            spans[2].style.transform = 'none';
+            spans.forEach(span => {
+                span.style.transform = 'none';
+                span.style.opacity = '1';
+            });
         });
     });
+    
+    // Add touch events support for better mobile experience
+    if ('ontouchstart' in window) {
+        menuToggle.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            this.click();
+        }, { passive: false });
+        
+        overlay.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            this.click();
+        }, { passive: false });
+    }
 }
 
 // Improved language switching with better mobile support

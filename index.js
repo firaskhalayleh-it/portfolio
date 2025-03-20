@@ -153,11 +153,11 @@ const translations = {
 };
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize language detection first - before anything else
+    fixLanguageDetection();
+    
     // Initialize semantic aria states for tab interface
     initAccessibility();
-    
-    // Initialize language based on browser settings
-    initLanguageSystem();
     
     // Show loading screen
     const loadingScreen = document.querySelector('.loading-screen');
@@ -1332,3 +1332,170 @@ function updateFooter(lang) {
         footerLinks[4].textContent = translations[lang].navContact;
     }
 }
+
+// Fix language detection issues
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize language detection first - before anything else
+    fixLanguageDetection();
+    
+    // Initialize semantic aria states for tab interface
+    initAccessibility();
+    
+    // Show loading screen
+    const loadingScreen = document.querySelector('.loading-screen');
+    
+    // Initialize everything after page is fully loaded
+    window.addEventListener('load', function() {
+        // ...existing code...
+    });
+});
+
+// New improved language detection function
+function fixLanguageDetection() {
+    console.log('Starting language detection...');
+    
+    try {
+        // Get browser language with better detection
+        const browserLanguage = getBrowserLanguage();
+        console.log('Detected browser language:', browserLanguage);
+        
+        // Check for saved language preference
+        const savedLang = localStorage.getItem('language');
+        console.log('Saved language preference:', savedLang);
+        
+        // Determine which language to use
+        let initialLang;
+        
+        if (savedLang) {
+            initialLang = savedLang;
+            console.log('Using saved language preference:', initialLang);
+        } else {
+            // Only support English and Arabic for now
+            initialLang = browserLanguage.startsWith('ar') ? 'ar' : 'en';
+            console.log('Setting initial language to:', initialLang);
+            
+            // Save this preference
+            localStorage.setItem('language', initialLang);
+        }
+        
+        // Apply language immediately to prevent flashing
+        applyLanguage(initialLang);
+        
+        // Set up language toggler
+        setupLanguageToggle();
+    } catch (error) {
+        console.error('Error during language detection:', error);
+        // Fallback to English
+        applyLanguage('en');
+    }
+}
+
+// Better browser language detection
+function getBrowserLanguage() {
+    const navLang = navigator.language || 
+                  navigator.browserLanguage || 
+                  navigator.userLanguage || 
+                  'en';
+    
+    return navLang.toLowerCase();
+}
+
+// Apply language immediately without waiting for page load
+function applyLanguage(lang) {
+    console.log('Applying language:', lang);
+    
+    // Set HTML lang and dir attributes
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    
+    // Set font family based on language
+    if (lang === 'ar') {
+        document.body.style.fontFamily = "'Tajawal', 'Roboto', sans-serif";
+    } else {
+        document.body.style.fontFamily = "'Roboto', sans-serif";
+    }
+    
+    // Update language toggle text (if element exists)
+    const langText = document.querySelector('.lang-text');
+    if (langText) {
+        langText.textContent = lang === 'en' ? translations.en.switchToArabic : translations.ar.switchToArabic;
+    }
+
+    // Update language toggle icon (if element exists)
+    const langIcon = document.getElementById('lang-icon');
+    if (langIcon) {
+        langIcon.className = `lang-indicator lang-${lang === 'en' ? 'ar' : 'en'}`;
+    }
+    
+    // Store language for later use
+    window.currentLanguage = lang;
+}
+
+// Set up language toggle with more robust implementation
+function setupLanguageToggle() {
+    const langBtn = document.getElementById('language-switch');
+    if (!langBtn) {
+        console.warn('Language switch button not found, skipping setup');
+        return;
+    }
+    
+    langBtn.addEventListener('click', function() {
+        // Get current language
+        const currentLang = document.documentElement.lang;
+        console.log('Current language before toggle:', currentLang);
+        
+        // Toggle between English and Arabic
+        const newLang = currentLang === 'en' ? 'ar' : 'en';
+        console.log('Switching to language:', newLang);
+        
+        // Add a smooth transition
+        document.body.style.opacity = '0.7';
+        
+        setTimeout(() => {
+            // Apply the new language
+            setLanguage(newLang);
+            
+            // Save preference
+            localStorage.setItem('language', newLang);
+            
+            // Update icon
+            const langIcon = document.getElementById('lang-icon');
+            if (langIcon) {
+                langIcon.className = `lang-indicator lang-${newLang === 'en' ? 'ar' : 'en'}`;
+            }
+            
+            // Restore opacity
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        }, 300);
+    });
+}
+
+// Ensure language initialization happens at page load too
+window.addEventListener('load', function() {
+    const currentLang = document.documentElement.lang;
+    console.log('Ensuring correct language at page load:', currentLang);
+    
+    // If language wasn't properly set, try again
+    if (!currentLang || (currentLang !== 'en' && currentLang !== 'ar')) {
+        console.warn('Language not properly set, trying again');
+        fixLanguageDetection();
+    } else {
+        // Make sure all content is updated with the correct language
+        setLanguage(currentLang);
+    }
+});
+
+// Keep the existing setLanguage function, but call our improved one first
+const originalSetLanguage = setLanguage;
+setLanguage = function(lang) {
+    // Apply language immediately
+    applyLanguage(lang);
+    
+    // Then do the full update with the original function
+    originalSetLanguage(lang);
+};
+
+// ...existing code...

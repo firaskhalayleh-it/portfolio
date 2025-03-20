@@ -933,6 +933,7 @@ nav ul li a:hover {
 
 .form-group {
     margin-bottom: 1.5rem;
+    position: relative;
 }
 
 .form-group input, .form-group textarea {
@@ -1707,4 +1708,190 @@ html[dir="rtl"] .language-toggle {
     html[dir="rtl"] .language-toggle {
         top: 80px;
     }
+}
+
+/* Create a control panel to group theme and language toggles together */
+.controls-panel {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    align-items: flex-end;
+    background: rgba(16, 24, 39, 0.3);
+    backdrop-filter: blur(5px);
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--glass-border);
+    transition: all 0.3s ease;
+}
+
+.light-theme .controls-panel {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Update theme toggle positioning */
+.theme-toggle {
+    position: relative;
+    top: auto;
+    right: auto;
+}
+
+/* Update language toggle positioning */
+.language-toggle {
+    position: relative;
+    top: auto;
+    left: auto;
+}
+
+/* Enhanced language button */
+.lang-btn {
+    background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+    width: 80px;
+    justify-content: center;
+    padding: 5px 12px;
+}
+
+/* Responsive design for control panel */
+@media (max-width: 768px) {
+    .controls-panel {
+        top: auto;
+        bottom: 20px;
+        right: 20px;
+    }
+}
+
+/* Improved RTL support for better language consistency */
+html[dir="rtl"] .project-tech {
+    display: flex;
+    flex-direction: row-end;
+}
+
+html[dir="rtl"] .project-links {
+    display: flex;
+    justify-content: flex-start;
+}
+
+html[dir="rtl"] .cta-buttons {
+    justify-content: flex-end;
+}
+
+/* Improve transition when switching languages */
+body, .section-title, .about-text p, .skill-category h3, .project-info h3, .project-info p, .contact-info h3, .contact-form h3, input, textarea {
+    transition: all 0.4s ease;
+}
+
+/* Remove top and left CSS that was conflicting in RTL mode */
+html[dir="rtl"] .language-toggle {
+    position: relative;
+    top: auto;
+    left: auto;
+}
+
+/* Additional UI enhancements for language switcher */
+.lang-indicator {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 5px;
+    background-size: cover;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.lang-en {
+    background-image: url('https://flagcdn.com/w20/us.png');
+}
+
+.lang-ar {
+    background-image: url('https://flagcdn.com/w20/ps.png');
+}
+
+/* Enhanced text direction for better language switch */
+.text-direction {
+    transition: direction 0.5s ease, text-align 0.5s ease;
+}
+
+/* Add these new styles for better accessibility and organization */
+
+/* Screen reader only class */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Skip link for keyboard navigation */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    background: var(--primary-color);
+    color: var(--dark-bg);
+    padding: 10px;
+    z-index: 2000;
+    transition: top 0.3s;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Fix the arrows span spacing issue from previous code */
+.arrows span {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-bottom: 2px solid var(--primary-color);
+    border-right: 2px solid var(--primary-color);
+    transform: rotate(45deg);
+    margin: -5px;
+    animation: arrows 2s infinite;
+    box-shadow: 2px 2px 2px var(--primary-glow);
+}
+
+/* More consistent focus styles for improved accessibility */
+a:focus, button:focus, input:focus, textarea:focus, select:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 3px;
+}
+
+/* Fix margin issue for project cards in RTL mode */
+html[dir="rtl"] .project-tech {
+    margin-bottom: 1.2rem;
+}
+
+/* Visual enhancements for form labels */
+.form-group {
+    position: relative;
+}
+
+.form-group label {
+    position: absolute;
+    left: 15px;
+    top: 10px;
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+/* Improved controls panel layout */
+.controls-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: rgba(var(--glass-bg), 0.5);
+    backdrop-filter: blur(10px);
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid var(--glass-border);
 }

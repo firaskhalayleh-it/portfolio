@@ -87,11 +87,11 @@ const translations = {
         // Hero Section
         heroGreeting: "مرحباً، أنا",
         heroRoles: [
-            "مدير أنظمة",
+            "مدير أنظمة معلومات",
             "مهندس برمجيات",
-            "مطور فلاتر",
-            "مطور نود.جي إس",
-            "متخصص البنية التحتية السحابية"
+            "مطور تطبيقات فلاتر",
+            "مطور خلفيات نود.جي إس",
+            "خبير في البنية التحتية السحابية"
         ],
         heroDescription: "متخصص في تطوير تطبيقات الجوال وأنظمة الخلفية والبنية التحتية السحابية",
         heroBtn1: "عرض أعمالي",
@@ -228,6 +228,54 @@ document.addEventListener('DOMContentLoaded', function() {
         initLanguageToggle();
     });
 });
+
+// Add these improved initialization functions
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize semantic aria states for tab interface
+    initAccessibility();
+    
+    // ...existing code...
+});
+
+// Initialize accessibility features
+function initAccessibility() {
+    // Enhance tab navigation for project filters
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    
+    filterBtns.forEach((btn, index) => {
+        // Add proper aria attributes
+        btn.setAttribute('aria-controls', 'projects-grid');
+        btn.setAttribute('id', `filter-tab-${index}`);
+        
+        btn.addEventListener('click', function() {
+            // Update aria-selected state when clicking tabs
+            filterBtns.forEach(b => b.setAttribute('aria-selected', 'false'));
+            this.setAttribute('aria-selected', 'true');
+            
+            // Announce filter change to screen readers
+            const announcement = document.createElement('div');
+            announcement.setAttribute('aria-live', 'polite');
+            announcement.className = 'sr-only';
+            announcement.textContent = `Showing ${this.textContent} projects`;
+            document.body.appendChild(announcement);
+            
+            // Remove announcement after screen reader has time to read it
+            setTimeout(() => {
+                document.body.removeChild(announcement);
+            }, 3000);
+        });
+    });
+    
+    // Make sure contact links have proper aria labels
+    document.querySelectorAll('.contact-item a').forEach(link => {
+        if (link.getAttribute('href').includes('mailto:')) {
+            link.setAttribute('aria-label', 'Send email to ' + link.textContent);
+        } else if (link.getAttribute('href').includes('tel:')) {
+            link.setAttribute('aria-label', 'Call ' + link.textContent);
+        }
+    });
+}
 
 // Custom cursor initialization
 function initCustomCursor() {
@@ -888,10 +936,15 @@ function isElementInViewport(el) {
 // Enhanced language toggle functionality
 function initLanguageToggle() {
     const langBtn = document.getElementById('language-switch');
-    if (!langBtn) return;
+    const langIcon = document.getElementById('lang-icon');
+    
+    if (!langBtn || !langIcon) return;
     
     // Check for saved language preference
     const savedLang = localStorage.getItem('language') || 'en';
+    
+    // Setup language icon
+    langIcon.className = `lang-indicator lang-${savedLang === 'en' ? 'ar' : 'en'}`;
     
     // Apply saved language
     setLanguage(savedLang);
@@ -901,14 +954,122 @@ function initLanguageToggle() {
         const currentLang = document.documentElement.lang;
         const newLang = currentLang === 'en' ? 'ar' : 'en';
         
-        // Add a fade transition when switching languages
-        document.body.style.opacity = '0.5';
+        // Update icon to show the language you'll switch to
+        langIcon.className = `lang-indicator lang-${newLang === 'en' ? 'ar' : 'en'}`;
+        
+        // Add a smooth transition when switching languages
+        document.body.style.opacity = '0.7';
+        
         setTimeout(() => {
             setLanguage(newLang);
             localStorage.setItem('language', newLang);
-            document.body.style.opacity = '1';
+            
+            // Restore opacity after language is set
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
         }, 300);
     });
+}
+
+// Improved language setting function
+function setLanguage(lang) {
+    // Set HTML lang and dir attributes
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    
+    // Update language toggle button text
+    const langBtn = document.getElementById('language-switch');
+    const langText = document.querySelector('.lang-text');
+    const langIcon = document.getElementById('lang-icon');
+    
+    if (langText) {
+        langText.textContent = lang === 'en' ? translations.en.switchToArabic : translations.ar.switchToArabic;
+    }
+    
+    if (langIcon) {
+        langIcon.className = `lang-indicator lang-${lang === 'en' ? 'ar' : 'en'}`;
+    }
+    
+    // Apply font-family based on language with a smooth transition
+    document.body.style.transition = "font-family 0.5s ease";
+    if (lang === 'ar') {
+        document.body.style.fontFamily = "'Tajawal', 'Roboto', sans-serif";
+    } else {
+        document.body.style.fontFamily = "'Roboto', sans-serif";
+    }
+    
+    // Update all sections with translated text
+    updateAllContent(lang);
+    
+    // If typed text is active, reinitialize it with a proper delay
+    // This ensures the typing animation works correctly in both languages
+    setTimeout(() => reinitializeTypedText(lang), 800);
+    
+    // Re-apply animations that might be affected by language change
+    resetAnimations();
+    
+    // Update form placeholders more elegantly 
+    updateFormPlaceholders(lang);
+}
+
+// New function to update form placeholders with better transitions
+function updateFormPlaceholders(lang) {
+    const formElements = {
+        '#name': translations[lang].contactNamePlaceholder,
+        '#email': translations[lang].contactEmailPlaceholder,
+        '#subject': translations[lang].contactSubjectPlaceholder,
+        '#message': translations[lang].contactMessagePlaceholder
+    };
+    
+    for (const selector in formElements) {
+        const element = document.querySelector(selector);
+        if (element) {
+            // Smoothly fade out/in the input field
+            element.style.opacity = '0.5';
+            setTimeout(() => {
+                element.placeholder = formElements[selector];
+                element.style.opacity = '1';
+            }, 300);
+        }
+    }
+}
+
+// Fix for RTL typing effect to handle Arabic text properly
+function typeEffect() {
+    if (!window.typedRoles) return;
+    
+    const typedElement = document.querySelector('.typed-text');
+    if (!typedElement) return;
+    
+    const currentRole = window.typedRoles[window.roleIndex];
+    const isRTL = document.documentElement.dir === 'rtl';
+    
+    if (window.isDeleting) {
+        typedElement.textContent = currentRole.substring(0, window.charIndex - 1);
+        window.charIndex--;
+        window.typeDelay = 50;
+    } else {
+        typedElement.textContent = currentRole.substring(0, window.charIndex + 1);
+        window.charIndex++;
+        window.typeDelay = 150;
+    }
+    
+    // Add a class to control text alignment based on language direction
+    typedElement.classList.add('text-direction');
+    typedElement.style.textAlign = isRTL ? 'right' : 'left';
+    
+    if (!window.isDeleting && window.charIndex === currentRole.length) {
+        window.isDeleting = true;
+        window.typeDelay = 1500; // Pause at complete word
+    } else if (window.isDeleting && window.charIndex === 0) {
+        window.isDeleting = false;
+        window.roleIndex = (window.roleIndex + 1) % window.typedRoles.length;
+        window.typeDelay = 500; // Pause before typing next word
+    }
+    
+    // Store timeout ID to allow clearing on language change
+    window.typingTimeout = setTimeout(typeEffect, window.typeDelay);
 }
 
 // Improved language setting function
@@ -1022,8 +1183,7 @@ function typeEffect() {
         window.typeDelay = 500; // Pause before typing next word
     }
     
-    // Store timeout ID to allow clearing on language change
-    window.typingTimeout = setTimeout(typeEffect, window.typeDelay);
+    setTimeout(typeEffect, window.typeDelay);
 }
 
 // Update navigation items with translated text
@@ -1067,118 +1227,6 @@ function reinitializeTypedText(lang) {
     const typedElement = document.querySelector('.typed-text');
     if (!typedElement) return;
     
-    // Clear existing text and animation
-    typedElement.textContent = '';
-    
-    // Set up new roles
-    window.typedRoles = translations[lang].heroRoles;
-    
-    // Reset variables for typing effect
-    window.roleIndex = 0;
-    window.charIndex = 0;
-    window.isDeleting = false;
-    window.typeDelay = 150;
-    
-    // Restart typing effect
-    setTimeout(typeEffect, 500);
-}
-
-// Modified typing effect function to use global variables
-function typeEffect() {
-    if (!window.typedRoles) return;
-    
-    const typedElement = document.querySelector('.typed-text');
-    if (!typedElement) return;
-    
-    const currentRole = window.typedRoles[window.roleIndex];
-    
-    if (window.isDeleting) {
-        typedElement.textContent = currentRole.substring(0, window.charIndex - 1);
-        window.charIndex--;
-        window.typeDelay = 50;
-    } else {
-        typedElement.textContent = currentRole.substring(0, window.charIndex + 1);
-        window.charIndex++;
-        window.typeDelay = 150;
-    }
-    
-    if (!window.isDeleting && window.charIndex === currentRole.length) {
-        window.isDeleting = true;
-        window.typeDelay = 1500; // Pause at complete word
-    } else if (window.isDeleting && window.charIndex === 0) {
-        window.isDeleting = false;
-        window.roleIndex = (window.roleIndex + 1) % window.typedRoles.length;
-        window.typeDelay = 500; // Pause before typing next word
-    }
-    
-    setTimeout(typeEffect, window.typeDelay);
-}
-
-// Update other sections with translated text (implementation details)
-function updateAboutSection(lang) {
-    const aboutTitle = document.querySelector('#about .section-title');
-    const aboutTexts = document.querySelectorAll('#about .about-text p');
-    const detailTitles = document.querySelectorAll('#about .detail-item h3');
-    const detailTexts = document.querySelectorAll('#about .detail-item p');
-    
-    if (aboutTitle) aboutTitle.textContent = translations[lang].aboutTitle;
-    
-    if (aboutTexts.length >= 3) {
-        aboutTexts[0].textContent = translations[lang].aboutText1;
-        aboutTexts[1].textContent = translations[lang].aboutText2;
-        aboutTexts[2].textContent = translations[lang].aboutText3;
-    }
-    
-    if (detailTitles.length >= 4 && detailTexts.length >= 4) {
-        detailTitles[0].textContent = translations[lang].aboutExperience;
-        detailTexts[0].textContent = translations[lang].aboutExperienceText;
-        
-        detailTitles[1].textContent = translations[lang].aboutEducation;
-        detailTexts[1].textContent = translations[lang].aboutEducationText;
-        
-        detailTitles[2].textContent = translations[lang].aboutLanguages;
-        detailTexts[2].textContent = translations[lang].aboutLanguagesText;
-        
-        detailTitles[3].textContent = translations[lang].aboutLocation;
-        detailTexts[3].textContent = translations[lang].aboutLocationText;
-    }
-}
-
-// Update skills section with translated text
-function updateSkillsSection(lang) {
-    // Main title
-    const skillsTitle = document.querySelector('#skills .section-title');
-    if (skillsTitle) skillsTitle.textContent = translations[lang].skillsTitle;
-    
-    // Category titles
-    const categoryTitles = document.querySelectorAll('#skills .skill-category h3');
-    if (categoryTitles.length >= 4) {
-        categoryTitles[0].textContent = translations[lang].skillsMobile;
-        categoryTitles[1].textContent = translations[lang].skillsBackend;
-        categoryTitles[2].textContent = translations[lang].skillsSystem;
-        categoryTitles[3].textContent = translations[lang].skillsProgramming;
-    }
-}
-
-// Update projects section with translated text
-function updateProjectsSection(lang) {
-    // Main title
-    const projectsTitle = document.querySelector('#projects .section-title');
-    if (projectsTitle) projectsTitle.textContent = translations[lang].projectsTitle;
-    
-    // Filter buttons
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    if (filterBtns.length >= 4) {
-        const spans = document.querySelectorAll('.filter-btn span');
-        if (spans.length >= 4) {
-            spans[0].textContent = translations[lang].projectsAll;
-            spans[1].textContent = translations[lang].projectsMobile;
-            spans[2].textContent = translations[lang].projectsWeb;
-            spans[3].textContent = translations[lang].projectsBackend;
-        }
-    }
-    
-    // Project cards
     const projectCards = document.querySelectorAll('.project-card');
     if (projectCards.length >= 3) {
         // First project - ERP

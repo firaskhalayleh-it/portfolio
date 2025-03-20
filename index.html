@@ -5,51 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Professional portfolio showcasing my work and skills">
     <meta name="theme-color" content="#0a0e17">
-    <title>My Portfolio</title>
+    <title>Firas Khalayleh | Portfolio</title>
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Three.js library -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"></script>
-    <!-- Adding GSAP for smooth animations -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
-    <!-- Add GSAP ScrollTrigger -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
-    <!-- Add Tilt.js for 3D hover effects -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
-    <!-- Custom font for futuristic look -->
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- Arabic font for RTL support -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js" defer></script>
 </head>
 <body>
-    <!-- Custom Cursor -->
-    <div class="cursor-outer"></div>
-    <div class="cursor-inner"></div>
-    
-    <!-- Theme Toggle -->
-    <div class="theme-toggle">
-        <input type="checkbox" id="theme-switch">
-        <label for="theme-switch" class="theme-label">
-            <i class="fas fa-sun"></i>
-            <i class="fas fa-moon"></i>
-            <div class="ball"></div>
-        </label>
-    </div>
-    
-    <!-- Language Toggle -->
-    <div class="language-toggle">
-        <button id="language-switch" class="lang-btn">
-            <span class="lang-text">عربي</span>
-            <i class="fas fa-language"></i>
-        </button>
+    <!-- Preloader -->
+    <div class="loading-screen" aria-hidden="true">
+        <div class="loader" role="status">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <span class="sr-only">Loading...</span>
+        </div>
     </div>
 
-    <!-- Header Section with Navigation -->
+    <!-- Accessibility Skip Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-outer" aria-hidden="true"></div>
+    <div class="cursor-inner" aria-hidden="true"></div>
+    
+    <!-- Site Controls -->
+    <div class="controls-panel" aria-label="Site controls">
+        <!-- Theme Toggle -->
+        <div class="theme-toggle">
+            <input type="checkbox" id="theme-switch" aria-label="Toggle dark/light theme">
+            <label for="theme-switch" class="theme-label">
+                <i class="fas fa-sun" aria-hidden="true" title="Light mode"></i>
+                <i class="fas fa-moon" aria-hidden="true" title="Dark mode"></i>
+                <div class="ball"></div>
+                <span class="sr-only">Toggle theme</span>
+            </label>
+        </div>
+        
+        <!-- Language Toggle -->
+        <div class="language-toggle">
+            <button id="language-switch" class="lang-btn" aria-label="Change language">
+                <span class="lang-indicator" id="lang-icon" aria-hidden="true"></span>
+                <span class="lang-text">عربي</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Header Section -->
     <header class="glass-nav">
         <div class="logo">
-            <h1>My <span class="highlight">Portfolio</span></h1>
+            <h1>Firas <span class="highlight">Khalayleh</span></h1>
         </div>
-        <nav>
+        <nav aria-label="Main navigation">
             <ul>
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
@@ -60,371 +74,387 @@
         </nav>
     </header>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <canvas id="hero-canvas"></canvas>
-        <div class="hero-particles"></div>
-        <div class="hero-content">
-            <h2 class="glitch-text">Hello, I'm <span class="highlight">Firas Khalayleh</span></h2>
-            <div class="typed-container">
-                <h3 class="typed-text"></h3>
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <canvas id="hero-canvas" aria-hidden="true"></canvas>
+            <div class="hero-particles" aria-hidden="true"></div>
+            <div class="hero-content">
+                <h2 class="glitch-text">Hello, I'm <span class="highlight">Firas Khalayleh</span></h2>
+                <div class="typed-container" aria-live="polite">
+                    <h3 class="typed-text"></h3>
+                </div>
+                <p>Specializing in mobile development, backend systems, and cloud infrastructure</p>
+                <div class="cta-buttons">
+                    <a href="#projects" class="btn primary-btn">View My Work</a>
+                    <a href="#contact" class="btn secondary-btn">Contact Me</a>
+                </div>
             </div>
-            <p>Specializing in mobile development, backend systems, and cloud infrastructure</p>
-            <div class="cta-buttons">
-                <a href="#projects" class="btn primary-btn">View My Work</a>
-                <a href="#contact" class="btn secondary-btn">Contact Me</a>
+            <div class="hero-image" aria-hidden="true">
+                <div class="profile-frame">
+                    <div class="profile-image">FK</div>
+                    <div class="profile-glow"></div>
+                </div>
             </div>
-        </div>
-        <div class="hero-image">
-            <!-- Replace placeholder with a futuristic profile frame -->
-            <div class="profile-frame">
-                <div class="profile-image">FK</div>
-                <div class="profile-glow"></div>
+            <div class="scroll-indicator" aria-hidden="true">
+                <div class="mouse">
+                    <div class="wheel"></div>
+                </div>
+                <div class="arrows">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
-        </div>
-        <div class="scroll-indicator">
-            <div class="mouse">
-                <div class="wheel"></div>
-            </div>
-            <div class="arrows">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="section-bg">
-            <div class="floating-shape shape1"></div>
-            <div class="floating-shape shape2"></div>
-            <div class="floating-shape shape3"></div>
-        </div>
-        <h2 class="section-title">About Me</h2>
-        <div class="about-content glass-card">
-            <div class="about-text">
-                <p>As a System Administrator & Software Engineer with experience at Spinel Technology, I specialize in developing robust applications and managing complex system infrastructures. My expertise spans mobile development with Flutter, backend systems with Node.js, and database management across various platforms.</p>
-                <p>I've successfully managed projects for clients like the National Insurance Company (NIC) and Istishari Arab Hospital (IAH), developing dynamic tools and integrating solutions that enhance operational efficiency.</p>
-                <p>My approach combines technical expertise with creative problem-solving, focusing on delivering scalable and user-friendly solutions for complex business needs.</p>
+        <!-- About Section -->
+        <section id="about" class="about">
+            <div class="section-bg" aria-hidden="true">
+                <div class="floating-shape shape1"></div>
+                <div class="floating-shape shape2"></div>
+                <div class="floating-shape shape3"></div>
             </div>
-            <div class="about-details">
-                <div class="detail-item">
-                    <h3>Experience</h3>
-                    <p>1 year at Spinel Technology</p>
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content glass-card">
+                <div class="about-text">
+                    <p>As a System Administrator & Software Engineer with experience at Spinel Technology, I specialize in developing robust applications and managing complex system infrastructures. My expertise spans mobile development with Flutter, backend systems with Node.js, and database management across various platforms.</p>
+                    <p>I've successfully managed projects for clients like the National Insurance Company (NIC) and Istishari Arab Hospital (IAH), developing dynamic tools and integrating solutions that enhance operational efficiency.</p>
+                    <p>My approach combines technical expertise with creative problem-solving, focusing on delivering scalable and user-friendly solutions for complex business needs.</p>
                 </div>
-                <div class="detail-item">
-                    <h3>Education</h3>
-                    <p>Computer Science Degree</p>
-                </div>
-                <div class="detail-item">
-                    <h3>Languages</h3>
-                    <p>Arabic (Native), English (Professional)</p>
-                </div>
-                <div class="detail-item">
-                    <h3>Location</h3>
-                    <p>Palestine</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section id="skills" class="skills">
-        <div class="section-bg">
-            <div class="grid-pattern"></div>
-        </div>
-        <h2 class="section-title">My Skills</h2>
-        <div class="skills-container">
-            <div class="skill-category">
-                <h3>Mobile Development</h3>
-                <div class="skills-grid">
-                    <div class="skill-item">
-                        <i class="fab fa-flutter"></i>
-                        <p>Flutter</p>
-                        <div class="skill-level">
-                            <div class="skill-bar" style="width: 95%"></div>
-                        </div>
+                <div class="about-details">
+                    <div class="detail-item">
+                        <h3>Experience</h3>
+                        <p>1 year at Spinel Technology</p>
                     </div>
-                    <div class="skill-item">
-                        <i class="fas fa-mobile-alt"></i>
-                        <p>Android & iOS</p>
-                        <div class="skill-level">
-                            <div class="skill-bar" style="width: 90%"></div>
-                        </div>
+                    <div class="detail-item">
+                        <h3>Education</h3>
+                        <p>Computer Science Degree</p>
                     </div>
-                    <div class="skill-item">
-                        <i class="fas fa-fire"></i>
-                        <p>Firebase</p>
-                        <div class="skill-level">
-                            <div class="skill-bar" style="width: 85%"></div>
-                        </div>
+                    <div class="detail-item">
+                        <h3>Languages</h3>
+                        <p>Arabic (Native), English (Professional)</p>
                     </div>
-                    <div class="skill-item">
-                        <i class="fas fa-code"></i>
-                        <p>XML</p>
-                        <div class="skill-level">
-                            <div class="skill-bar" style="width: 80%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="skill-category">
-                <h3>Backend & Database</h3>
-                <div class="skills-grid">
-                    <div class="skill-item">
-                        <i class="fab fa-node-js"></i>
-                        <p>Node.js (Express)</p>
-                        <div class="skill-level">
-                            <div class="skill-bar" style="width: 90%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <i class="fas fa-database"></i>
-                        <p>MySQL</p>
-                        <div class="skill-level">
-                            <div class="skill-bar" style="width: 85%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <i class="fas fa-database"></i>
-                        <p>PostgreSQL</p>
-                        <div class="skill-level">
-                            <div class="skill-bar" style="width: 85%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <i class="fas fa-database"></i>
-                        <p>Oracle DB</p>
-                        <div class="skill-level">
-                            <div class="skill-bar" style="width: 80%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="skill-category">
-                <h3>System & Cloud</h3>
-                <div class="skills-grid">
-                    <div class="skill-item">
-                        <i class="fab fa-linux"></i>
-                        <p>Linux</p>
-                        <div class="skill-level">
-                            <div class="skill-bar" style="width: 90%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <i class="fab fa-docker"></i>
-                        <p>Docker</p>
-                        <div class="skill-level">
-                            <div class="skill-bar" style="width: 85%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <i class="fab fa-aws"></i>
-                        <p>AWS</p>
-                        <div class="skill-level">
-                            <div class="skill-bar" style="width: 80%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <i class="fab fa-google"></i>
-                        <p>Google Cloud</p>
-                        <div class="skill-level">
-                            <div class="skill-bar" style="width: 75%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Skills Section - Fix nesting issue in programming section -->
-            <div class="skill-category">
-                <h3>Programming & Tools</h3>
-                <div class="skills-grid">
-                    <div class="skill-item">
-                        <i class="fab fa-python"></i>
-                        <p>Python</p>
-                        <div class="skill-level">
-                            <div class="skill-bar" style="width: 85%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <i class="fab fa-js"></i>
-                        <p>JavaScript</p>
-                        <div class="skill-level">
-                            <div class="skill-bar" style="width: 90%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <i class="fab fa-git-alt"></i>
-                        <p>Git</p>
-                        <div class="skill-level">
-                            <div class="skill-bar" style="width: 88%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <i class="fas fa-terminal"></i>
-                        <p>Bash</p>
-                        <div class="skill-level">
-                            <div class="skill-bar" style="width: 80%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="projects">
-        <div class="section-bg">
-            <div class="floating-shape shape4"></div>
-            <div class="floating-shape shape5"></div>
-        </div>
-        <h2 class="section-title">My Projects</h2>
-        <!-- Add filter buttons with span for better styling -->
-        <div class="project-filters">
-            <button class="filter-btn active" data-filter="all"><span>All</span></button>
-            <button class="filter-btn" data-filter="mobile"><span>Mobile</span></button>
-            <button class="filter-btn" data-filter="web"><span>Web</span></button>
-            <button class="filter-btn" data-filter="backend"><span>Backend</span></button>
-        </div>
-        <div class="projects-grid">
-            <div class="project-card">
-                <div class="project-img">
-                    <img src="https://via.placeholder.com/350x200" alt="Mobile ERP System">
-                </div>
-                <div class="project-info">
-                    <h3>Mobile ERP System</h3>
-                    <p>Led the development of a comprehensive mobile ERP system at Spinel Technology, handling business logic, design integration, and ensuring seamless user experience.</p>
-                    <div class="project-tech">
-                        <span>Flutter</span>
-                        <span>Node.js</span>
-                        <span>Oracle APEX</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="#" class="btn small-btn"><i class="fas fa-globe"></i> Details</a>
-                        <a href="#" class="btn small-btn"><i class="fab fa-github"></i> Code</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="project-card">
-                <div class="project-img">
-                    <img src="https://via.placeholder.com/350x200" alt="Fantasize E-commerce">
-                </div>
-                <div class="project-info">
-                    <h3>Fantasize E-commerce</h3>
-                    <p>Graduation project featuring an e-commerce application built with Flutter, focusing on dynamic customization features for products and packages with high performance and scalability.</p>
-                    <div class="project-tech">
-                        <span>Flutter</span>
-                        <span>Firebase</span>
-                        <span>API Integration</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="#" class="btn small-btn"><i class="fas fa-globe"></i> Details</a>
-                        <a href="#" class="btn small-btn"><i class="fab fa-github"></i> Code</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="project-card">
-                <div class="project-img">
-                    <img src="https://via.placeholder.com/350x200" alt="Advanced POS System">
-                </div>
-                <div class="project-info">
-                    <h3>Advanced POS System</h3>
-                    <p>Developed a tablet-compatible POS and multi-standard accounting system using Flutter, Node.js, Python and PostgreSQL with advanced features like product key generation, QR codes, and transaction forecasting algorithms.</p>
-                    <div class="project-tech">
-                        <span>Flutter</span>
-                        <span>Node.js</span>
-                        <span>Python</span>
-                        <span>PostgreSQL</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="#" class="btn small-btn"><i class="fas fa-globe"></i> Details</a>
-                        <a href="#" class="btn small-btn"><i class="fab fa-github"></i> Code</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="section-bg">
-            <div class="grid-pattern"></div>
-        </div>
-        <h2 class="section-title">Get In Touch</h2>
-        <div class="contact-container glass-card">
-            <div class="contact-info">
-                <h3>Contact Information</h3>
-                <p>Feel free to reach out to me for collaborations or inquiries about system administration, software development, or mobile applications.</p>
-                <div class="contact-details">
-                    <div class="contact-item">
-                        <i class="fas fa-envelope"></i>
-                        <p>fkmkh11@gmail.com</p>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-phone"></i>
-                        <p>+972594386856</p>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-map-marker-alt"></i>
+                    <div class="detail-item">
+                        <h3>Location</h3>
                         <p>Palestine</p>
                     </div>
                 </div>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                    <a href="#"><i class="fab fa-github"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="skills">
+            <div class="section-bg" aria-hidden="true">
+                <div class="grid-pattern"></div>
+            </div>
+            <h2 class="section-title">My Skills</h2>
+            <div class="skills-container">
+                <!-- Mobile Development Skills -->
+                <div class="skill-category">
+                    <h3>Mobile Development</h3>
+                    <div class="skills-grid">
+                        <div class="skill-item">
+                            <i class="fab fa-flutter" aria-hidden="true"></i>
+                            <p>Flutter</p>
+                            <div class="skill-level" aria-label="Skill level: 95%">
+                                <div class="skill-bar" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-mobile-alt" aria-hidden="true"></i>
+                            <p>Android & iOS</p>
+                            <div class="skill-level" aria-label="Skill level: 90%">
+                                <div class="skill-bar" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-fire" aria-hidden="true"></i>
+                            <p>Firebase</p>
+                            <div class="skill-level" aria-label="Skill level: 85%">
+                                <div class="skill-bar" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-code" aria-hidden="true"></i>
+                            <p>XML</p>
+                            <div class="skill-level" aria-label="Skill level: 80%">
+                                <div class="skill-bar" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Backend & Database Skills -->
+                <div class="skill-category">
+                    <h3>Backend & Database</h3>
+                    <div class="skills-grid">
+                        <div class="skill-item">
+                            <i class="fab fa-node-js" aria-hidden="true"></i>
+                            <p>Node.js (Express)</p>
+                            <div class="skill-level" aria-label="Skill level: 90%">
+                                <div class="skill-bar" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-database" aria-hidden="true"></i>
+                            <p>MySQL</p>
+                            <div class="skill-level" aria-label="Skill level: 85%">
+                                <div class="skill-bar" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-database" aria-hidden="true"></i>
+                            <p>PostgreSQL</p>
+                            <div class="skill-level" aria-label="Skill level: 85%">
+                                <div class="skill-bar" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-database" aria-hidden="true"></i>
+                            <p>Oracle DB</p>
+                            <div class="skill-level" aria-label="Skill level: 80%">
+                                <div class="skill-bar" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- System & Cloud Skills -->
+                <div class="skill-category">
+                    <h3>System & Cloud</h3>
+                    <div class="skills-grid">
+                        <div class="skill-item">
+                            <i class="fab fa-linux" aria-hidden="true"></i>
+                            <p>Linux</p>
+                            <div class="skill-level" aria-label="Skill level: 90%">
+                                <div class="skill-bar" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-docker" aria-hidden="true"></i>
+                            <p>Docker</p>
+                            <div class="skill-level" aria-label="Skill level: 85%">
+                                <div class="skill-bar" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-aws" aria-hidden="true"></i>
+                            <p>AWS</p>
+                            <div class="skill-level" aria-label="Skill level: 80%">
+                                <div class="skill-bar" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-google" aria-hidden="true"></i>
+                            <p>Google Cloud</p>
+                            <div class="skill-level" aria-label="Skill level: 75%">
+                                <div class="skill-bar" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Programming & Tools Skills -->
+                <div class="skill-category">
+                    <h3>Programming & Tools</h3>
+                    <div class="skills-grid">
+                        <div class="skill-item">
+                            <i class="fab fa-python" aria-hidden="true"></i>
+                            <p>Python</p>
+                            <div class="skill-level" aria-label="Skill level: 85%">
+                                <div class="skill-bar" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-js" aria-hidden="true"></i>
+                            <p>JavaScript</p>
+                            <div class="skill-level" aria-label="Skill level: 90%">
+                                <div class="skill-bar" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-git-alt" aria-hidden="true"></i>
+                            <p>Git</p>
+                            <div class="skill-level" aria-label="Skill level: 88%">
+                                <div class="skill-bar" style="width: 88%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-terminal" aria-hidden="true"></i>
+                            <p>Bash</p>
+                            <div class="skill-level" aria-label="Skill level: 80%">
+                                <div class="skill-bar" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="contact-form">
-                <h3>Send Me a Message</h3>
-                <form id="contact-form">
-                    <div class="form-group">
-                        <input type="text" id="name" name="name" placeholder="Your Name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" id="email" name="email" placeholder="Your Email" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="subject" name="subject" placeholder="Subject">
-                    </div>
-                    <div class="form-group">
-                        <textarea id="message" name="message" placeholder="Your Message" required></textarea>
-                    </div>
-                    <button type="submit" class="btn primary-btn">Send Message</button>
-                </form>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="projects">
+            <div class="section-bg" aria-hidden="true">
+                <div class="floating-shape shape4"></div>
+                <div class="floating-shape shape5"></div>
             </div>
-        </div>
-    </section>
+            <h2 class="section-title">My Projects</h2>
+            
+            <!-- Project Filters -->
+            <div class="project-filters" role="tablist">
+                <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true"><span>All</span></button>
+                <button class="filter-btn" data-filter="mobile" role="tab" aria-selected="false"><span>Mobile</span></button>
+                <button class="filter-btn" data-filter="web" role="tab" aria-selected="false"><span>Web</span></button>
+                <button class="filter-btn" data-filter="backend" role="tab" aria-selected="false"><span>Backend</span></button>
+            </div>
+            
+            <!-- Project Cards -->
+            <div class="projects-grid">
+                <!-- Project 1: Mobile ERP System -->
+                <article class="project-card" data-category="mobile web">
+                    <div class="project-img">
+                        <img src="https://via.placeholder.com/350x200" alt="Mobile ERP System screenshot">
+                    </div>
+                    <div class="project-info">
+                        <h3>Mobile ERP System</h3>
+                        <p>Led the development of a comprehensive mobile ERP system at Spinel Technology, handling business logic, design integration, and ensuring seamless user experience.</p>
+                        <div class="project-tech">
+                            <span>Flutter</span>
+                            <span>Node.js</span>
+                            <span>Oracle APEX</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="btn small-btn"><i class="fas fa-globe" aria-hidden="true"></i> Details</a>
+                            <a href="#" class="btn small-btn"><i class="fab fa-github" aria-hidden="true"></i> Code</a>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Project 2: Fantasize E-commerce -->
+                <article class="project-card" data-category="mobile web">
+                    <div class="project-img">
+                        <img src="https://via.placeholder.com/350x200" alt="Fantasize E-commerce application screenshot">
+                    </div>
+                    <div class="project-info">
+                        <h3>Fantasize E-commerce</h3>
+                        <p>Graduation project featuring an e-commerce application built with Flutter, focusing on dynamic customization features for products and packages with high performance and scalability.</p>
+                        <div class="project-tech">
+                            <span>Flutter</span>
+                            <span>Firebase</span>
+                            <span>API Integration</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="btn small-btn"><i class="fas fa-globe" aria-hidden="true"></i> Details</a>
+                            <a href="#" class="btn small-btn"><i class="fab fa-github" aria-hidden="true"></i> Code</a>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Project 3: Advanced POS System -->
+                <article class="project-card" data-category="mobile backend">
+                    <div class="project-img">
+                        <img src="https://via.placeholder.com/350x200" alt="Advanced POS System screenshot">
+                    </div>
+                    <div class="project-info">
+                        <h3>Advanced POS System</h3>
+                        <p>Developed a tablet-compatible POS and multi-standard accounting system using Flutter, Node.js, Python and PostgreSQL with advanced features like product key generation, QR codes, and transaction forecasting algorithms.</p>
+                        <div class="project-tech">
+                            <span>Flutter</span>
+                            <span>Node.js</span>
+                            <span>Python</span>
+                            <span>PostgreSQL</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="btn small-btn"><i class="fas fa-globe" aria-hidden="true"></i> Details</a>
+                            <a href="#" class="btn small-btn"><i class="fab fa-github" aria-hidden="true"></i> Code</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact">
+            <div class="section-bg" aria-hidden="true">
+                <div class="grid-pattern"></div>
+            </div>
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-container glass-card">
+                <!-- Contact Information -->
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    <p>Feel free to reach out to me for collaborations or inquiries about system administration, software development, or mobile applications.</p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                            <p><a href="mailto:fkmkh11@gmail.com">fkmkh11@gmail.com</a></p>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone" aria-hidden="true"></i>
+                            <p><a href="tel:+972594386856">+972 594 386 856</a></p>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                            <p>Palestine</p>
+                        </div>
+                    </div>
+                    <!-- Social Media Links -->
+                    <div class="social-links">
+                        <a href="#" aria-label="LinkedIn Profile"><i class="fab fa-linkedin" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="GitHub Profile"><i class="fab fa-github" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="Twitter Profile"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="Instagram Profile"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Contact Form -->
+                <div class="contact-form">
+                    <h3>Send Me a Message</h3>
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label for="name" class="sr-only">Your Name</label>
+                            <input type="text" id="name" name="name" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="sr-only">Your Email</label>
+                            <input type="email" id="email" name="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject" class="sr-only">Subject</label>
+                            <input type="text" id="subject" name="subject" placeholder="Subject">
+                        </div>
+                        <div class="form-group">
+                            <label for="message" class="sr-only">Your Message</label>
+                            <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn primary-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer>
-        <div class="footer-content">
-            <p>&copy; 2023 My Portfolio. All Rights Reserved.</p>
-            <div class="footer-links">
-                <a href="#home">Home</a>
-                <a href="#about">About</a>
-                <a href="#skills">Skills</a>
-                <a href="#projects">Projects</a>
-                <a href="#contact">Contact</a>
-            </div>
+        <div class="footer-content"></div>
+            <p>&copy; <span id="current-year">2023</span> Firas Khalayleh. All Rights Reserved.</p>
+            <nav aria-label="Footer navigation">
+                <div class="footer-links">
+                    <a href="#home">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#skills">Skills</a>
+                    <a href="#projects">Projects</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </nav>
         </div>
     </footer>
 
-    <!-- Add loading screen -->
-    <div class="loading-screen">
-        <div class="loader">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
-        </div>
-    </div>
-
+    <!-- Main JavaScript -->
+    <script>
+        // Update copyright year automatically
+        document.getElementById('current-year').textContent = new Date().getFullYear().toString();
+    </script>
     <script src="index.js"></script>
 </body>
 </html>

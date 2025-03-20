@@ -26,16 +26,16 @@
     
     /* Theme transition timing */
     --theme-transition: 0.5s ease;
+
+    /* RGB color values for rgba use */
+    --primary-color-rgb: 15, 224, 255;
+    --secondary-color-rgb: 255, 0, 230;
+    --accent-color-rgb: 112, 0, 255;
 }
 
 /* Light theme color variables */
 .light-theme {
     --primary-color: #0090ff;
-    --primary-glow: rgba(0, 144, 255, 0.4);
-    --secondary-color: #e800cc;
-    --secondary-glow: rgba(232, 0, 204, 0.4);
-    --accent-color: #6200ee;
-    --accent-glow: rgba(98, 0, 238, 0.4);
     
     --dark-bg: #f0f5ff;
     --darker-bg: #e5eeff;

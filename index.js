@@ -153,6 +153,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize semantic aria states for tab interface
     initAccessibility();
     
+    // Initialize mobile menu
+    initMobileMenu();
+    
     // Show loading screen
     const loadingScreen = document.querySelector('.loading-screen');
     
@@ -177,9 +180,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Initialize theme switch
         initThemeSwitch();
-        
-        // Initialize tilt effect on project cards
-        initTiltEffect();
         
         // Initialize project filters
         initProjectFilters();

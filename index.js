@@ -153,6 +153,12 @@ const translations = {
 };
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize semantic aria states for tab interface
+    initAccessibility();
+    
+    // Initialize language based on browser settings
+    initLanguageSystem();
+    
     // Show loading screen
     const loadingScreen = document.querySelector('.loading-screen');
     
@@ -933,29 +939,56 @@ function isElementInViewport(el) {
     );
 }
 
-// Enhanced language toggle functionality
+// Improved language system initialization
+function initLanguageSystem() {
+    // Get browser language (first 2 characters - language code)
+    const browserLang = navigator.language || navigator.userLanguage;
+    const langCode = browserLang.substring(0, 2).toLowerCase();
+    
+    // Check for saved language preference
+    const savedLang = localStorage.getItem('language');
+    
+    // Determine which language to use (saved preference or browser language)
+    let initialLang;
+    
+    if (savedLang) {
+        // Use saved preference if available
+        initialLang = savedLang;
+    } else {
+        // Use browser language if supported, otherwise default to English
+        initialLang = (langCode === 'ar') ? 'ar' : 'en';
+        // Save this preference
+        localStorage.setItem('language', initialLang);
+    }
+    
+    // Set the initial language
+    setLanguage(initialLang);
+    
+    // Initialize language toggle button
+    initLanguageToggle();
+}
+
+// Improved language toggle functionality
 function initLanguageToggle() {
     const langBtn = document.getElementById('language-switch');
     const langIcon = document.getElementById('lang-icon');
+    const langText = document.querySelector('.lang-text');
     
     if (!langBtn || !langIcon) return;
     
-    // Check for saved language preference
-    const savedLang = localStorage.getItem('language') || 'en';
+    // Get current language
+    const currentLang = document.documentElement.lang || 'en';
     
-    // Setup language icon
-    langIcon.className = `lang-indicator lang-${savedLang === 'en' ? 'ar' : 'en'}`;
-    
-    // Apply saved language
-    setLanguage(savedLang);
+    // Set up language icon and text based on current language
+    langIcon.className = `lang-indicator lang-${currentLang === 'en' ? 'ar' : 'en'}`;
+    if (langText) {
+        langText.textContent = currentLang === 'en' ? translations.en.switchToArabic : translations.ar.switchToArabic;
+    }
     
     // Listen for language toggle
     langBtn.addEventListener('click', function() {
         const currentLang = document.documentElement.lang;
         const newLang = currentLang === 'en' ? 'ar' : 'en';
-        
-        // Update icon to show the language you'll switch to
-        langIcon.className = `lang-indicator lang-${newLang === 'en' ? 'ar' : 'en'}`;
         
         // Add a smooth transition when switching languages
         document.body.style.opacity = '0.7';
@@ -963,6 +996,9 @@ function initLanguageToggle() {
         setTimeout(() => {
             setLanguage(newLang);
             localStorage.setItem('language', newLang);
+            
+            // Update icon to show the language you'll switch to next time
+            langIcon.className = `lang-indicator lang-${newLang === 'en' ? 'ar' : 'en'}`;
             
             // Restore opacity after language is set
             setTimeout(() => {
@@ -972,70 +1008,171 @@ function initLanguageToggle() {
     });
 }
 
-// Improved language setting function
+// Completely revised setLanguage function to fix language issues
 function setLanguage(lang) {
+    console.log('Setting language to:', lang);
+    
+    // Validate language code
+    if (lang !== 'en' && lang !== 'ar') {
+        console.error('Invalid language code:', lang);
+        lang = 'en'; // Fallback to English
+    }
+    
     // Set HTML lang and dir attributes
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
     
-    // Update language toggle button text
-    const langBtn = document.getElementById('language-switch');
-    const langText = document.querySelector('.lang-text');
-    const langIcon = document.getElementById('lang-icon');
+    // Set appropriate font-family
+    document.body.style.fontFamily = lang === 'ar' 
+        ? "'Tajawal', 'Roboto', sans-serif"
+        : "'Roboto', sans-serif";
     
+    // Update language toggle button text
+    const langText = document.querySelector('.lang-text');
     if (langText) {
         langText.textContent = lang === 'en' ? translations.en.switchToArabic : translations.ar.switchToArabic;
     }
     
-    if (langIcon) {
-        langIcon.className = `lang-indicator lang-${lang === 'en' ? 'ar' : 'en'}`;
-    }
+    // Update all content with translated text
+    updateNavigation(lang);
+    updateHeroSection(lang);
+    updateAboutSection(lang);
+    updateSkillsSection(lang);
+    updateProjectsSection(lang);
+    updateContactSection(lang);
+    updateFooter(lang);
     
-    // Apply font-family based on language with a smooth transition
-    document.body.style.transition = "font-family 0.5s ease";
-    if (lang === 'ar') {
-        document.body.style.fontFamily = "'Tajawal', 'Roboto', sans-serif";
-    } else {
-        document.body.style.fontFamily = "'Roboto', sans-serif";
-    }
+    // Fix typing effect animation for the current language
+    resetTypingAnimation(lang);
     
-    // Update all sections with translated text
-    updateAllContent(lang);
-    
-    // If typed text is active, reinitialize it with a proper delay
-    // This ensures the typing animation works correctly in both languages
-    setTimeout(() => reinitializeTypedText(lang), 800);
-    
-    // Re-apply animations that might be affected by language change
+    // Fix animations and effects that might be affected by language change
     resetAnimations();
-    
-    // Update form placeholders more elegantly 
-    updateFormPlaceholders(lang);
 }
 
-// New function to update form placeholders with better transitions
-function updateFormPlaceholders(lang) {
-    const formElements = {
-        '#name': translations[lang].contactNamePlaceholder,
-        '#email': translations[lang].contactEmailPlaceholder,
-        '#subject': translations[lang].contactSubjectPlaceholder,
-        '#message': translations[lang].contactMessagePlaceholder
-    };
+// New function to properly update the about section
+function updateAboutSection(lang) {
+    const aboutTitle = document.querySelector('#about .section-title');
+    const aboutParagraphs = document.querySelectorAll('.about-text p');
+    const aboutDetailTitles = document.querySelectorAll('.detail-item h3');
+    const aboutDetailTexts = document.querySelectorAll('.detail-item p');
     
-    for (const selector in formElements) {
-        const element = document.querySelector(selector);
-        if (element) {
-            // Smoothly fade out/in the input field
-            element.style.opacity = '0.5';
-            setTimeout(() => {
-                element.placeholder = formElements[selector];
-                element.style.opacity = '1';
-            }, 300);
-        }
+    if (aboutTitle) {
+        aboutTitle.textContent = translations[lang].aboutTitle;
+    }
+    
+    if (aboutParagraphs.length >= 3) {
+        aboutParagraphs[0].textContent = translations[lang].aboutText1;
+        aboutParagraphs[1].textContent = translations[lang].aboutText2;
+        aboutParagraphs[2].textContent = translations[lang].aboutText3;
+    }
+    
+    if (aboutDetailTitles.length >= 4 && aboutDetailTexts.length >= 4) {
+        // Experience
+        aboutDetailTitles[0].textContent = translations[lang].aboutExperience;
+        aboutDetailTexts[0].textContent = translations[lang].aboutExperienceText;
+        
+        // Education
+        aboutDetailTitles[1].textContent = translations[lang].aboutEducation;
+        aboutDetailTexts[1].textContent = translations[lang].aboutEducationText;
+        
+        // Languages
+        aboutDetailTitles[2].textContent = translations[lang].aboutLanguages;
+        aboutDetailTexts[2].textContent = translations[lang].aboutLanguagesText;
+        
+        // Location
+        aboutDetailTitles[3].textContent = translations[lang].aboutLocation;
+        aboutDetailTexts[3].textContent = translations[lang].aboutLocationText;
     }
 }
 
-// Fix for RTL typing effect to handle Arabic text properly
+// New function to update skills section
+function updateSkillsSection(lang) {
+    const skillsTitle = document.querySelector('#skills .section-title');
+    const skillCategoryTitles = document.querySelectorAll('.skill-category h3');
+    
+    if (skillsTitle) {
+        skillsTitle.textContent = translations[lang].skillsTitle;
+    }
+    
+    if (skillCategoryTitles.length >= 4) {
+        skillCategoryTitles[0].textContent = translations[lang].skillsMobile;
+        skillCategoryTitles[1].textContent = translations[lang].skillsBackend;
+        skillCategoryTitles[2].textContent = translations[lang].skillsSystem;
+        skillCategoryTitles[3].textContent = translations[lang].skillsProgramming;
+    }
+}
+
+// New function to update projects section
+function updateProjectsSection(lang) {
+    const projectsTitle = document.querySelector('#projects .section-title');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('.project-card');
+    
+    if (projectsTitle) {
+        projectsTitle.textContent = translations[lang].projectsTitle;
+    }
+    
+    // Update filter buttons
+    if (filterBtns.length >= 4) {
+        filterBtns[0].querySelector('span').textContent = translations[lang].projectsAll;
+        filterBtns[1].querySelector('span').textContent = translations[lang].projectsMobile;
+        filterBtns[2].querySelector('span').textContent = translations[lang].projectsWeb;
+        filterBtns[3].querySelector('span').textContent = translations[lang].projectsBackend;
+    }
+    
+    // Update project cards
+    projectCards.forEach((card, index) => {
+        const title = card.querySelector('h3');
+        const desc = card.querySelector('p');
+        const links = card.querySelectorAll('.small-btn');
+        
+        if (index === 0) {
+            // Mobile ERP System
+            if (title) title.textContent = translations[lang].projectERPTitle;
+            if (desc) desc.textContent = translations[lang].projectERPDesc;
+        } else if (index === 1) {
+            // E-commerce
+            if (title) title.textContent = translations[lang].projectEcommerceTitle;
+            if (desc) desc.textContent = translations[lang].projectEcommerceDesc;
+        } else if (index === 2) {
+            // POS System
+            if (title) title.textContent = translations[lang].projectPOSTitle;
+            if (desc) desc.textContent = translations[lang].projectPOSDesc;
+        }
+        
+        // Update buttons
+        if (links.length >= 2) {
+            links[0].innerHTML = `<i class="fas fa-globe" aria-hidden="true"></i> ${translations[lang].projectDetailsBtn}`;
+            links[1].innerHTML = `<i class="fab fa-github" aria-hidden="true"></i> ${translations[lang].projectCodeBtn}`;
+        }
+    });
+}
+
+// Improved function to fix typing animation for different languages
+function resetTypingAnimation(lang) {
+    const typedElement = document.querySelector('.typed-text');
+    if (!typedElement) return;
+    
+    // Clear existing text and animation
+    typedElement.textContent = '';
+    if (window.typingTimeout) {
+        clearTimeout(window.typingTimeout);
+    }
+    
+    // Reset typing variables
+    window.typedRoles = translations[lang].heroRoles;
+    window.roleIndex = 0;
+    window.charIndex = 0;
+    window.isDeleting = false;
+    window.typeDelay = 150;
+    
+    // Start typing animation with the new language
+    setTimeout(() => {
+        typeEffect();
+    }, 800);
+}
+
+// Modified typing effect to handle RTL languages better
 function typeEffect() {
     if (!window.typedRoles) return;
     
@@ -1055,8 +1192,7 @@ function typeEffect() {
         window.typeDelay = 150;
     }
     
-    // Add a class to control text alignment based on language direction
-    typedElement.classList.add('text-direction');
+    // Apply appropriate text alignment for the language direction
     typedElement.style.textAlign = isRTL ? 'right' : 'left';
     
     if (!window.isDeleting && window.charIndex === currentRole.length) {
@@ -1068,122 +1204,8 @@ function typeEffect() {
         window.typeDelay = 500; // Pause before typing next word
     }
     
-    // Store timeout ID to allow clearing on language change
+    // Store the timeout ID to allow clearing on language change
     window.typingTimeout = setTimeout(typeEffect, window.typeDelay);
-}
-
-// Improved language setting function
-function setLanguage(lang) {
-    // Set HTML lang and dir attributes
-    document.documentElement.lang = lang;
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    
-    // Update language toggle button text
-    const langBtn = document.getElementById('language-switch');
-    const langText = document.querySelector('.lang-text');
-    if (langText) {
-        langText.textContent = lang === 'en' ? translations.en.switchToArabic : translations.ar.switchToArabic;
-    }
-    
-    // Apply font-family based on language
-    if (lang === 'ar') {
-        document.body.style.fontFamily = "'Tajawal', 'Roboto', sans-serif";
-    } else {
-        document.body.style.fontFamily = "'Roboto', sans-serif";
-    }
-    
-    // Update all sections with translated text
-    updateAllContent(lang);
-    
-    // If typed text is active, reinitialize it with a proper delay
-    setTimeout(() => reinitializeTypedText(lang), 500);
-    
-    // Re-apply animations that might be affected by language change
-    resetAnimations();
-}
-
-// Helper function to update all content sections
-function updateAllContent(lang) {
-    updateNavigation(lang);
-    updateHeroSection(lang);
-    updateAboutSection(lang);
-    updateSkillsSection(lang);
-    updateProjectsSection(lang);
-    updateContactSection(lang);
-    updateFooter(lang);
-}
-
-// Reset animations that might be affected by language switch
-function resetAnimations() {
-    // Re-enable animations for project cards
-    document.querySelectorAll('.project-card').forEach(card => {
-        if (window.VanillaTilt && window.innerWidth > 768) {
-            VanillaTilt.init(card, {
-                max: 15,
-                speed: 300,
-                glare: true,
-                "max-glare": 0.2,
-                perspective: 1000,
-                scale: 1.05
-            });
-        }
-    });
-    
-    // Re-apply hover effects
-    addHoverEffects();
-}
-
-// Improved typing effect for multilingual support
-function reinitializeTypedText(lang) {
-    const typedElement = document.querySelector('.typed-text');
-    if (!typedElement) return;
-    
-    // Clear existing text and animation
-    typedElement.textContent = '';
-    clearTimeout(window.typingTimeout);
-    
-    // Set up new roles
-    window.typedRoles = translations[lang].heroRoles;
-    
-    // Reset variables for typing effect
-    window.roleIndex = 0;
-    window.charIndex = 0;
-    window.isDeleting = false;
-    window.typeDelay = 150;
-    
-    // Restart typing effect
-    typeEffect();
-}
-
-// Improved typing effect that handles directions
-function typeEffect() {
-    if (!window.typedRoles) return;
-    
-    const typedElement = document.querySelector('.typed-text');
-    if (!typedElement) return;
-    
-    const currentRole = window.typedRoles[window.roleIndex];
-    
-    if (window.isDeleting) {
-        typedElement.textContent = currentRole.substring(0, window.charIndex - 1);
-        window.charIndex--;
-        window.typeDelay = 50;
-    } else {
-        typedElement.textContent = currentRole.substring(0, window.charIndex + 1);
-        window.charIndex++;
-        window.typeDelay = 150;
-    }
-    
-    if (!window.isDeleting && window.charIndex === currentRole.length) {
-        window.isDeleting = true;
-        window.typeDelay = 1500; // Pause at complete word
-    } else if (window.isDeleting && window.charIndex === 0) {
-        window.isDeleting = false;
-        window.roleIndex = (window.roleIndex + 1) % window.typedRoles.length;
-        window.typeDelay = 500; // Pause before typing next word
-    }
-    
-    setTimeout(typeEffect, window.typeDelay);
 }
 
 // Update navigation items with translated text

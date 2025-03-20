@@ -318,16 +318,28 @@ function initThemeSwitch() {
     const savedTheme = localStorage.getItem('theme');
     const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
-    // Apply theme based on saved preference or system preference
+    // Apply theme based on saved preference or system preference without animation
+    document.body.classList.add('theme-transition');
+    
     if (savedTheme === 'light' || (savedTheme === null && !prefersDarkMode)) {
         document.body.classList.add('light-theme');
         themeSwitch.checked = true;
-        updateMetaThemeColor('#f0f5ff'); // Light theme color
+        updateMetaThemeColor('#f4f8ff'); // Updated light theme color
     } else {
+        document.body.classList.remove('light-theme');
         updateMetaThemeColor('#0a0e17'); // Dark theme color
     }
     
-    // Prevent transitions on page load
+    // Force reflow to apply the theme instantly
+    void document.body.offsetHeight;
+    
+    // Remove transition blocker and apply proper transition state
+    setTimeout(() => {
+        document.body.classList.remove('theme-transition');
+        document.body.classList.add('theme-transition-complete');
+    }, 50);
+    
+    // Prevent transitions on page load for controls panel
     const controlsPanel = document.querySelector('.controls-panel');
     if (controlsPanel) {
         controlsPanel.style.transition = 'none';
@@ -339,41 +351,94 @@ function initThemeSwitch() {
         }, 100);
     }
     
-    // Listen for theme toggle
+    // Listen for theme toggle with improved transitions
     themeSwitch.addEventListener('change', function() {
+        // Add transition-blocking class
+        document.body.classList.add('theme-transition');
+        
         // Fix controls panel stability during transition
         if (controlsPanel) {
             const height = controlsPanel.offsetHeight;
             controlsPanel.style.height = `${height}px`;
         }
         
+        // Force reflow
+        void document.body.offsetHeight;
+        
+        // Apply theme change
         if (this.checked) {
-            // Apply light theme with transition
+            // Apply light theme
             document.body.classList.add('light-theme');
             localStorage.setItem('theme', 'light');
-            updateMetaThemeColor('#f0f5ff');
+            updateMetaThemeColor('#f4f8ff');
             
             // Update canvas particles for light theme
             updateCanvasForLightTheme();
+            
+            // Update any other theme-specific elements
+            updateThemeSpecificElements('light');
         } else {
-            // Apply dark theme with transition
+            // Apply dark theme
             document.body.classList.remove('light-theme');
             localStorage.setItem('theme', 'dark');
             updateMetaThemeColor('#0a0e17');
             
             // Update canvas particles for dark theme
             updateCanvasForDarkTheme();
+            
+            // Update any other theme-specific elements
+            updateThemeSpecificElements('dark');
         }
         
-        // Reset controls panel dimensions after transition
+        // Remove transition-blocking class and apply transition state
         setTimeout(() => {
+            document.body.classList.remove('theme-transition');
+            document.body.classList.add('theme-transition-complete');
+            
+            // Reset controls panel dimensions after transition
             if (controlsPanel) {
                 controlsPanel.style.height = '';
             }
-        }, 500);
+            
+            // Remove the transition class after animations complete
+            setTimeout(() => {
+                document.body.classList.remove('theme-transition-complete');
+            }, 500);
+        }, 50);
     });
     
-    // ...existing code...
+    // Listen for system preference changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (localStorage.getItem('theme') === null) {
+            // Block transitions during automatic theme switch
+            document.body.classList.add('theme-transition');
+            
+            // Force reflow
+            void document.body.offsetHeight;
+            
+            if (e.matches) {
+                document.body.classList.remove('light-theme');
+                themeSwitch.checked = false;
+                updateMetaThemeColor('#0a0e17');
+                updateThemeSpecificElements('dark');
+            } else {
+                document.body.classList.add('light-theme');
+                themeSwitch.checked = true;
+                updateMetaThemeColor('#f4f8ff');
+                updateThemeSpecificElements('light');
+            }
+            
+            // Remove transition blocking and apply transition state
+            setTimeout(() => {
+                document.body.classList.remove('theme-transition');
+                document.body.classList.add('theme-transition-complete');
+                
+                setTimeout(() => {
+                    document.body.classList.remove('theme-transition-complete');
+                }, 500);
+            }, 50);
+        }
+    });
 }
 
 // Update meta theme color for browser UI
@@ -399,18 +464,18 @@ function updateCanvasForLightTheme() {
     const geometry = particles.geometry;
     const colors = geometry.attributes.color;
     
-    // Update particle colors for light theme
+    // Update particle colors for light theme with enhanced colors
     for (let i = 0; i < colors.array.length; i += 3) {
         if (i % 6 === 0) {
-            // Primary color (blue)
+            // Primary color (blue) - slightly deeper for better visibility
             colors.array[i] = 0.0;       // R
-            colors.array[i + 1] = 0.35;  // G
-            colors.array[i + 2] = 1.0;   // B
+            colors.array[i + 1] = 0.32;  // G
+            colors.array[i + 2] = 0.9;   // B - slightly reduced from 1.0
         } else {
-            // Secondary color (pink)
-            colors.array[i] = 0.91;      // R
+            // Secondary color (pink) - slightly deeper
+            colors.array[i] = 0.89;      // R - slightly reduced from 0.91
             colors.array[i + 1] = 0.0;   // G
-            colors.array[i + 2] = 0.8;   // B
+            colors.array[i + 2] = 0.6;   // B - reduced from 0.8 for richer color
         }
     }
     
@@ -443,6 +508,55 @@ function updateCanvasForDarkTheme() {
     }
     
     colors.needsUpdate = true;
+}
+
+// Helper function to update any additional theme-specific elements
+function updateThemeSpecificElements(theme) {
+    // Update floating shapes color based on theme
+    const floatingShapes = document.querySelectorAll('.floating-shape');
+    if (floatingShapes.length > 0) {
+        floatingShapes.forEach(shape => {
+            // Apply reduced opacity for light theme shapes
+            if (theme === 'light') {
+                shape.style.opacity = '0.15';
+            } else {
+                shape.style.opacity = '0.2';
+            }
+        });
+    }
+    
+    // Update grid patterns for better visibility in current theme
+    const gridPatterns = document.querySelectorAll('.grid-pattern');
+    if (gridPatterns.length > 0) {
+        gridPatterns.forEach(grid => {
+            if (theme === 'light') {
+                grid.style.opacity = '0.1'; // Less visible in light theme
+            } else {
+                grid.style.opacity = '0.2';
+            }
+        });
+    }
+    
+    // Update scroll indicators to match theme
+    const scrollIndicators = document.querySelectorAll('.scroll-indicator');
+    if (scrollIndicators.length > 0) {
+        scrollIndicators.forEach(indicator => {
+            if (theme === 'light') {
+                indicator.style.opacity = '0.6'; // More visible in light theme
+            } else {
+                indicator.style.opacity = '0.8';
+            }
+        });
+    }
+    
+    // Update section titles for better theme consistency
+    document.querySelectorAll('.section-title').forEach(title => {
+        if (theme === 'light') {
+            title.style.textShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
+        } else {
+            title.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.2)';
+        }
+    });
 }
 
 // Enhanced Three.js background with particles
@@ -1663,6 +1777,14 @@ function setupLanguageToggle() {
         const newLang = currentLang === 'en' ? 'ar' : 'en';
         console.log('Switching to language:', newLang);
         
+        // Check if we're also in a theme transition
+        const isInThemeTransition = document.body.classList.contains('theme-transition');
+        
+        // If not in theme transition, add transition blocking class
+        if (!isInThemeTransition) {
+            document.body.classList.add('theme-transition');
+        }
+        
         // Freeze controls during transition to prevent height issues
         const controlsPanel = document.querySelector('.controls-panel');
         if (controlsPanel) {
@@ -1676,75 +1798,56 @@ function setupLanguageToggle() {
             controlsPanel.style.overflow = 'hidden';
         }
         
-        // Add transition class to body
-        document.body.classList.add('language-transition');
+        // Force reflow to apply transition blocking
+        void document.body.offsetHeight;
         
-        // Delay the actual language change to allow for transition
+        // Apply language change
+        applyLanguage(newLang);
+        localStorage.setItem('language', newLang);
+        
+        // Update language-specific UI
+        updateMobileMenuText(newLang);
+        updateLanguageAnnouncement(newLang);
+        
+        // Fix mobile-specific layout issues after language change
+        fixMobileLayoutAfterLanguageChange(newLang);
+        
+        // Remove transition blocking and apply transition state
         setTimeout(() => {
-            // Apply the new language
-            applyLanguage(newLang);
-            
-            // Save preference
-            localStorage.setItem('language', newLang);
-            
-            // Update mobile menu text if visible
-            updateMobileMenuText(newLang);
-            
-            // Update icon
-            const langIcon = document.getElementById('lang-icon');
-            if (langIcon) {
-                langIcon.className = `lang-indicator lang-${newLang === 'en' ? 'ar' : 'en'}`;
-                
-                // Announce language change for screen readers
-                const announcement = document.getElementById('language-announcement');
-                if (announcement) {
-                    announcement.textContent = `Language changed to ${newLang === 'en' ? 'English' : 'Arabic'}`;
-                }
+            // Release dimensions on controls panel
+            if (controlsPanel) {
+                controlsPanel.style.height = '';
+                controlsPanel.style.width = '';
+                controlsPanel.style.overflow = '';
             }
             
-            // Fix mobile-specific layout issues after language change
-            fixMobileLayoutAfterLanguageChange(newLang);
-            
-            // Remove transition class and release dimensions
-            setTimeout(() => {
-                if (controlsPanel) {
-                    controlsPanel.style.height = '';
-                    controlsPanel.style.width = '';
-                    controlsPanel.style.overflow = '';
-                }
+            // If we weren't already in a theme transition, handle transition classes
+            if (!isInThemeTransition) {
+                document.body.classList.remove('theme-transition');
+                document.body.classList.add('theme-transition-complete');
                 
-                document.body.classList.remove('language-transition');
-                document.body.classList.add('language-transition-complete');
-                
-                // Clean up animation class
+                // Clean up transition class
                 setTimeout(() => {
-                    document.body.classList.remove('language-transition-complete');
+                    document.body.classList.remove('theme-transition-complete');
                 }, 500);
-            }, 300);
-        }, 300);
+            }
+        }, 100);
     });
     
-    // Add touch events support for better mobile experience
-    if ('ontouchstart' in window) {
-        langBtn.addEventListener('touchstart', function(e) {
-            // Prevent any unwanted behavior
-            e.preventDefault();
-            // Trigger click
-            this.click();
-        }, { passive: false });
-    }
+    // ... existing touch event handling code ...
 }
 
-// Helper function to update mobile menu text
-function updateMobileMenuText(lang) {
-    const mobileNavLinks = document.querySelectorAll('.mobile-nav a');
-    
-    if (mobileNavLinks.length >= 5) {
-        mobileNavLinks[0].textContent = translations[lang].navHome;
-        mobileNavLinks[1].textContent = translations[lang].navAbout;
-        mobileNavLinks[2].textContent = translations[lang].navSkills;
-        mobileNavLinks[3].textContent = translations[lang].navProjects;
-        mobileNavLinks[4].textContent = translations[lang].navContact;
+// Helper function to announce language changes to screen readers
+function updateLanguageAnnouncement(lang) {
+    const langIcon = document.getElementById('lang-icon');
+    if (langIcon) {
+        langIcon.className = `lang-indicator lang-${lang === 'en' ? 'ar' : 'en'}`;
+        
+        // Announce language change for screen readers
+        const announcement = document.getElementById('language-announcement');
+        if (announcement) {
+            announcement.textContent = `Language changed to ${lang === 'en' ? 'English' : 'Arabic'}`;
+        }
     }
 }
 

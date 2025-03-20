@@ -5,45 +5,94 @@
     box-sizing: border-box;
 }
 
+/* Enhanced Theme System - Variables and Organization */
+
 :root {
+    /* Core theme colors - Dark Theme (default) */
     --primary-color: #0fe0ff;
     --primary-glow: rgba(15, 224, 255, 0.5);
     --secondary-color: #ff00e6;
     --secondary-glow: rgba(255, 0, 230, 0.5);
-    --dark-bg: #0a0e17;
-    --darker-bg: #050812;
-    --light-text: #e6f4f1;
-    --glass-bg: rgba(16, 24, 39, 0.7);
-    --glass-border: rgba(15, 224, 255, 0.2);
-    --card-bg: rgba(20, 28, 45, 0.8);
-    
-    /* New variables */
     --accent-color: #7000ff;
     --accent-glow: rgba(112, 0, 255, 0.5);
+    
+    /* Background colors */
+    --dark-bg: #0a0e17;
+    --darker-bg: #050812;
+    --card-bg: rgba(20, 28, 45, 0.8);
+    --glass-bg: rgba(16, 24, 39, 0.7);
+    --glass-border: rgba(15, 224, 255, 0.2);
+    
+    /* Text colors */
+    --light-text: #e6f4f1;
+    --muted-text: #a0b2c3;
+    --heading-text: #ffffff;
+    
+    /* UI elements */
     --grid-color: rgba(15, 224, 255, 0.1);
+    --input-bg: rgba(255, 255, 255, 0.05);
+    --input-border: rgba(15, 224, 255, 0.2);
+    --input-focus-bg: rgba(255, 255, 255, 0.1);
+    
+    /* Animations and transitions */
     --transition-slow: 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
     --transition-fast: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
-    
-    /* Theme transition timing */
     --theme-transition: 0.5s ease;
-
+    
     /* RGB color values for rgba use */
     --primary-color-rgb: 15, 224, 255;
     --secondary-color-rgb: 255, 0, 230;
     --accent-color-rgb: 112, 0, 255;
+    --dark-bg-rgb: 10, 14, 23;
+    --light-text-rgb: 230, 244, 241;
 }
 
-/* Light theme color variables */
+/* Light theme variables - completely revised */
 .light-theme {
-    --primary-color: #0090ff;
+    /* Core theme colors - Light Theme */
+    --primary-color: #0082e6; /* Deeper blue */
+    --primary-glow: rgba(0, 130, 230, 0.5);
+    --secondary-color: #e4006e; /* Deeper pink */
+    --secondary-glow: rgba(228, 0, 110, 0.5);
+    --accent-color: #6100cc; /* Deeper purple */
+    --accent-glow: rgba(97, 0, 204, 0.5);
     
-    --dark-bg: #f0f5ff;
-    --darker-bg: #e5eeff;
-    --light-text: #2a2a3a;
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --glass-border: rgba(0, 144, 255, 0.2);
-    --card-bg: rgba(255, 255, 255, 0.8);
-    --grid-color: rgba(0, 144, 255, 0.1);
+    /* Background colors */
+    --dark-bg: #f4f8ff; /* Cleaner light blue background */
+    --darker-bg: #e2eaf8; /* Slight contrast for sections */
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(0, 130, 230, 0.2);
+    
+    /* Text colors */
+    --light-text: #293045; /* Dark blue-gray for better contrast */
+    --muted-text: #5c6a8a; /* Medium blue-gray */
+    --heading-text: #151c30; /* Near black with blue tint */
+    
+    /* UI elements */
+    --grid-color: rgba(0, 130, 230, 0.1);
+    --input-bg: rgba(0, 0, 0, 0.03);
+    --input-border: rgba(0, 130, 230, 0.2);
+    --input-focus-bg: rgba(0, 0, 0, 0.05);
+    
+    /* RGB color values */
+    --primary-color-rgb: 0, 130, 230;
+    --secondary-color-rgb: 228, 0, 110;
+    --accent-color-rgb: 97, 0, 204;
+    --dark-bg-rgb: 244, 248, 255;
+    --light-text-rgb: 41, 48, 69;
+}
+
+/* Apply theme transition to all elements */
+*, *::before, *::after {
+    transition: 
+        color var(--theme-transition),
+        background-color var(--theme-transition),
+        background var(--theme-transition),
+        border-color var(--theme-transition),
+        box-shadow var(--theme-transition),
+        fill var(--theme-transition),
+        stroke var(--theme-transition);
 }
 
 body {
@@ -52,19 +101,14 @@ body {
     color: var(--light-text);
     background-color: var(--dark-bg);
     background-image: 
-        radial-gradient(circle at 20% 20%, var(--secondary-glow) 0%, transparent 20%),
-        radial-gradient(circle at 80% 80%, var(--primary-glow) 0%, transparent 20%);
+        radial-gradient(circle at 20% 20%, rgba(var(--secondary-color-rgb), 0.15) 0%, transparent 20%),
+        radial-gradient(circle at 80% 80%, rgba(var(--primary-color-rgb), 0.15) 0%, transparent 20%);
     background-attachment: fixed;
     overflow-x: hidden;
     cursor: none;
-    transition: 
-        background-color var(--theme-transition),
-        background var(--theme-transition),
-        color var(--theme-transition),
-        border-color var(--theme-transition),
-        box-shadow var(--theme-transition);
-    transition: opacity 0.3s ease, background-color var(--theme-transition);
-    will-change: opacity;
+    /* Simplify transitions to prevent conflicts */
+    transition: background-color var(--theme-transition),
+                color var(--theme-transition);
 }
 
 a {
@@ -83,32 +127,23 @@ ul {
     width: 100%;
     height: 100%;
     z-index: -1;
-    background: linear-gradient(135deg, rgba(10, 14, 23, 0.8) 0%, rgba(5, 8, 18, 0.9) 100%);
-    transition: 
-        background-color var(--theme-transition),
-        background var(--theme-transition),
-        color var(--theme-transition),
-        border-color var(--theme-transition),
-        box-shadow var(--theme-transition);
+    background: linear-gradient(135deg, 
+        rgba(var(--dark-bg-rgb), 0.7) 0%, 
+        rgba(var(--dark-bg-rgb), 0.9) 100%);
+    transition: background var(--theme-transition);
 }
 
 /* Glass card effect */
 .glass-card {
     background: var(--glass-bg);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* For Safari */
     border-radius: 15px;
     border: 1px solid var(--glass-border);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
     padding: 2rem;
-    transition: 
-        background-color var(--theme-transition),
-        background var(--theme-transition),
-        color var(--theme-transition),
-        border-color var(--theme-transition),
-        box-shadow var(--theme-transition);
 }
 
-/* Header styles */
 header {
     display: flex;
     justify-content: space-between;
@@ -127,8 +162,9 @@ header {
 }
 
 .glass-nav {
-    background: rgba(10, 14, 23, 0.8);
+    background: rgba(var(--dark-bg-rgb), 0.8);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--glass-border);
 }
 
@@ -345,7 +381,7 @@ nav ul li a:hover {
 
 .primary-btn {
     background-color: var(--primary-color);
-    color: var(--darker-bg);
+    color: var(--dark-bg);
     box-shadow: 0 0 15px var(--primary-glow);
 }
 
@@ -366,8 +402,7 @@ nav ul li a:hover {
 }
 
 .light-theme .primary-btn {
-    background-color: var(--primary-color);
-    color: white;
+    color: white; /* Always white text on primary color in light theme */
 }
 
 .secondary-btn {
@@ -484,8 +519,6 @@ nav ul li a:hover {
 .skill-category h3 {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
-    color: #333;
-    font-family: 'Orbitron', sans-serif;
     color: var(--primary-color);
     position: relative;
     display: inline-block;
@@ -513,18 +546,12 @@ nav ul li a:hover {
     background: var(--card-bg);
     border-radius: 15px;
     padding: 1.5rem;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     text-align: center;
     transition: transform 0.3s, box-shadow 0.3s;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(var(--primary-color-rgb), 0.1);
     position: relative;
     overflow: hidden;
-    transition: 
-        background-color var(--theme-transition),
-        background var(--theme-transition),
-        color var(--theme-transition),
-        border-color var(--theme-transition),
-        box-shadow var(--theme-transition);
 }
 
 .skill-item:hover {
@@ -540,7 +567,7 @@ nav ul li a:hover {
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 10px var(--primary-glow));
+    filter: drop-shadow(0 0 5px var(--primary-glow));
 }
 
 .skill-item p {
@@ -575,11 +602,6 @@ nav ul li a:hover {
     background: var(--card-bg);
     border: 1px solid var(--glass-border);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-}
-
-.skill-item {
-    position: relative;
-    overflow: hidden;
 }
 
 .skill-item::after {
@@ -624,10 +646,10 @@ nav ul li a:hover {
 .project-card {
     border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     transition: transform 0.3s, box-shadow 0.3s;
     background: var(--card-bg);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(var(--primary-color-rgb), 0.1);
     position: relative;
     transform-style: preserve-3d;
     perspective: 1000px;
@@ -907,25 +929,18 @@ nav ul li a:hover {
 .form-group input, .form-group textarea {
     width: 100%;
     padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--glass-border);
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
     border-radius: 8px;
     color: var(--light-text);
     font-family: 'Roboto', sans-serif;
-    transition: all 0.3s;
-    transition: 
-        background-color var(--theme-transition),
-        background var(--theme-transition),
-        color var(--theme-transition),
-        border-color var(--theme-transition),
-        box-shadow var(--theme-transition);
 }
 
 .form-group input:focus, .form-group textarea:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 10px var(--primary-glow);
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--input-focus-bg);
 }
 
 .form-group textarea {
@@ -1146,6 +1161,7 @@ footer {
 /* Enhanced glowing effects */
 .highlight {
     position: relative;
+    color: var(--primary-color);
 }
 
 .highlight::before {
@@ -1279,20 +1295,20 @@ footer {
 }
 
 .theme-label .ball {
-    background-color: var(--light-text);
+    background-color: #ffffff;
     position: absolute;
     top: 3px;
     left: 3px;
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    transition: transform 0.3s ease-out;
+    transition: transform 0.3s ease-out, background-color 0.3s ease;
     z-index: 5;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
 .light-theme .theme-label .ball {
-    background-color: var(--darker-bg);
+    background-color: #ffffff;
 }
 
 #theme-switch {
@@ -2216,7 +2232,7 @@ html[dir="rtl"] .mobile-nav.active {
     gap: 15px;
     flex-direction: column;
     align-items: flex-end;
-    background: rgba(16, 24, 39, 0.8);
+    background: rgba(var(--dark-bg-rgb), 0.8);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px); /* For Safari */
     padding: 15px;
@@ -2464,4 +2480,29 @@ html[dir="rtl"] .theme-label .fa-sun {
 html[dir="rtl"] .theme-label .fa-moon {
     right: 8px;
     left: auto;
+}
+
+/* Fix transitions during theme change */
+body.theme-transition {
+    transition: none !important;
+}
+
+body.theme-transition * {
+    transition: none !important;
+}
+
+body.theme-transition-complete {
+    transition: background-color var(--theme-transition),
+                color var(--theme-transition);
+}
+
+body.theme-transition-complete * {
+    transition: 
+        color var(--theme-transition),
+        background-color var(--theme-transition),
+        background var(--theme-transition),
+        border-color var(--theme-transition),
+        box-shadow var(--theme-transition),
+        fill var(--theme-transition),
+        stroke var(--theme-transition);
 }

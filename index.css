@@ -63,6 +63,8 @@ body {
         color var(--theme-transition),
         border-color var(--theme-transition),
         box-shadow var(--theme-transition);
+    transition: opacity 0.3s ease, background-color var(--theme-transition);
+    will-change: opacity;
 }
 
 a {
@@ -210,6 +212,7 @@ nav ul li a:hover {
     position: relative;
     overflow: hidden;
     text-align: center;
+    direction: rtl;
 }
 
 #hero-canvas {
@@ -285,6 +288,13 @@ nav ul li a:hover {
 .typed-container {
     min-height: 50px;
     margin-bottom: 1.5rem;
+    direction: inherit;
+    text-align: inherit;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 .typed-text::after {
@@ -297,9 +307,16 @@ nav ul li a:hover {
     50% { opacity: 0; }
 }
 
+.typed-text {
+    display: inline-block;
+    min-height: 2rem;
+    width: 100%;
+}
+
 .cta-buttons {
     display: flex;
     gap: 1.5rem;
+    justify-content: center;
 }
 
 .btn {
@@ -1013,6 +1030,8 @@ footer {
     
     .hero-content {
         margin-bottom: 2rem;
+        padding: 0 1rem;
+        text-align: center;
     }
     
     .about-content, .contact-container {
@@ -1051,6 +1070,62 @@ footer {
     .language-toggle {
         top: 80px;
         left: 20px;
+    }
+    
+    /* Show mobile menu toggle and hide desktop nav on mobile */
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
+    header nav {
+        display: none;
+    }
+    
+    /* Fixed position for controls panel on mobile */
+    .controls-panel {
+        top: 20px;
+        left: 20px;
+        right: auto;
+        flex-direction: row;
+        gap: 10px;
+    }
+    
+    html[dir="rtl"] .controls-panel {
+        left: auto;
+        right: 20px;
+    }
+    
+    /* Adjust hero content for better mobile display in both RTL and LTR */
+    .hero-content {
+        padding: 0 1rem;
+        text-align: center;
+    }
+    
+    html[dir="rtl"] .hero-content {
+        text-align: center;
+    }
+    
+    /* Ensure the typed text is properly aligned in both LTR and RTL */
+    .typed-container {
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    html[dir="rtl"] .typed-container,
+    html[dir="rtl"] .typed-text {
+        text-align: center;
+    }
+    
+    /* Center CTA buttons on mobile */
+    .cta-buttons {
+        justify-content: center;
+    }
+    
+    /* Fix section title alignment in mobile RTL */
+    html[dir="rtl"] .section-title {
+        width: 100%;
+        text-align: center;
     }
 }
 
@@ -1843,4 +1918,306 @@ html[dir="rtl"] .project-tech {
     padding: 15px;
     border-radius: 15px;
     border: 1px solid var(--glass-border);
+}
+
+/* Enhanced RTL and Mobile Support */
+
+/* Fix RTL mobile layout issues */
+@media (max-width: 768px) {
+    html[dir="rtl"] {
+        overflow-x: hidden; /* Prevent horizontal scrolling on RTL mobile */
+    }
+    
+    /* Fix mobile menu positioning in RTL */
+    html[dir="rtl"] .mobile-menu-toggle {
+        left: 20px;
+        right: auto;
+    }
+    
+    html[dir="rtl"] .mobile-nav {
+        left: -80%;
+        right: auto;
+        transform-origin: left center;
+    }
+    
+    html[dir="rtl"] .mobile-nav.active {
+        left: 0;
+        right: auto;
+    }
+    
+    /* Fix hero content on mobile RTL */
+    html[dir="rtl"] .hero-content {
+        width: 100%;
+        max-width: 100%;
+        padding: 0 1rem;
+    }
+    
+    /* Make buttons stack on smaller screens in RTL mode */
+    html[dir="rtl"] .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    /* Fix about section in RTL mobile */
+    html[dir="rtl"] .about-content,
+    html[dir="rtl"] .about-details {
+        text-align: right;
+        padding: 0 0.5rem;
+    }
+    
+    /* Fix project filters in RTL mobile */
+    html[dir="rtl"] .project-filters {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        width: 100%;
+    }
+    
+    /* Fix form fields in RTL mobile */
+    html[dir="rtl"] .form-group input,
+    html[dir="rtl"] .form-group textarea {
+        text-align: right;
+    }
+}
+
+/* Mobile navigation styles - enhanced for RTL */
+.mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1001;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+}
+
+.hamburger-icon {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.hamburger-icon span {
+    display: block;
+    width: 30px;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+/* RTL support for hamburger */
+html[dir="rtl"] .hamburger-icon span {
+    transform-origin: right center;
+}
+
+html:not([dir="rtl"]) .hamburger-icon span {
+    transform-origin: left center;
+}
+
+.mobile-nav {
+    position: fixed;
+    top: 0;
+    right: -80%; /* Start off-screen */
+    width: 80%;
+    height: 100vh;
+    background: var(--darker-bg);
+    z-index: 1000;
+    transition: all 0.4s cubic-bezier(0.77, 0.2, 0.05, 1.0);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    transform-origin: right center;
+}
+
+.mobile-nav.active {
+    right: 0;
+}
+
+.mobile-nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.mobile-nav ul li a {
+    font-size: 1.5rem;
+    font-family: 'Orbitron', sans-serif;
+    color: var(--light-text);
+    position: relative;
+    display: inline-block;
+    padding: 0.5rem 0;
+}
+
+.mobile-nav ul li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+html[dir="rtl"] .mobile-nav ul li a::after {
+    left: auto;
+    right: 0;
+}
+
+.mobile-nav ul li a:hover::after,
+.mobile-nav ul li a.active::after {
+    width: 100%;
+}
+
+.mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(3px);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-menu-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Better language transition handling */
+html[dir="rtl"] .hero {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Prevent layout shifts in RTL mode */
+.typed-container {
+    min-height: 50px;
+    direction: inherit;
+    text-align: inherit;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.typed-text {
+    display: inline-block;
+    min-height: 2rem;
+    width: 100%;
+}
+
+html[dir="rtl"] .typed-text {
+    text-align: right;
+}
+
+/* Add directional alignment fixes for RTL mobile */
+@media (max-width: 768px) {
+    /* Show mobile menu toggle and hide desktop nav on mobile */
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
+    header nav {
+        display: none;
+    }
+    
+    /* Fixed position for controls panel on mobile */
+    .controls-panel {
+        top: 20px;
+        left: 20px;
+        right: auto;
+        flex-direction: row;
+        gap: 10px;
+    }
+    
+    html[dir="rtl"] .controls-panel {
+        left: auto;
+        right: 20px;
+    }
+    
+    /* Adjust hero content for better mobile display in both RTL and LTR */
+    .hero-content {
+        padding: 0 1rem;
+        text-align: center;
+    }
+    
+    html[dir="rtl"] .hero-content {
+        text-align: center;
+    }
+    
+    /* Ensure the typed text is properly aligned in both LTR and RTL */
+    .typed-container {
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    html[dir="rtl"] .typed-container,
+    html[dir="rtl"] .typed-text {
+        text-align: center;
+    }
+    
+    /* Center CTA buttons on mobile */
+    .cta-buttons {
+        justify-content: center;
+    }
+    
+    /* Fix section title alignment in mobile RTL */
+    html[dir="rtl"] .section-title {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Fix stacking context issues */
+html[dir="rtl"] .section-bg {
+    transform: scaleX(-1);
+}
+
+/* Ensure proper language transition */
+.language-transition {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.language-transition-complete {
+    opacity: 1;
+}
+
+/* Fix form placeholders in RTL */
+html[dir="rtl"] input::placeholder,
+html[dir="rtl"] textarea::placeholder {
+    text-align: right;
+}
+
+/* Fix mobile menu animation in RTL */
+@keyframes slideInRTL {
+    from { left: -100%; }
+    to { left: 0; }
+}
+
+@keyframes slideInLTR {
+    from { right: -100%; }
+    to { right: 0; }
+}
+
+html[dir="rtl"] .mobile-nav.animating {
+    animation: slideInRTL 0.3s forwards;
+}
+
+html:not([dir="rtl"]) .mobile-nav.animating {
+    animation: slideInLTR 0.3s forwards;
 }

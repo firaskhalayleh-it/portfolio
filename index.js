@@ -1443,15 +1443,19 @@ function setupLanguageToggle() {
         const newLang = currentLang === 'en' ? 'ar' : 'en';
         console.log('Switching to language:', newLang);
         
-        // Add a smooth transition
-        document.body.style.opacity = '0.7';
+        // Add transition class to body
+        document.body.classList.add('language-transition');
         
+        // Delay the actual language change to allow for transition
         setTimeout(() => {
             // Apply the new language
-            setLanguage(newLang);
+            applyLanguage(newLang);
             
             // Save preference
             localStorage.setItem('language', newLang);
+            
+            // Update mobile menu text if visible
+            updateMobileMenuText(newLang);
             
             // Update icon
             const langIcon = document.getElementById('lang-icon');
@@ -1459,37 +1463,323 @@ function setupLanguageToggle() {
                 langIcon.className = `lang-indicator lang-${newLang === 'en' ? 'ar' : 'en'}`;
             }
             
-            // Restore opacity
+            // Fix mobile-specific layout issues after language change
+            fixMobileLayoutAfterLanguageChange(newLang);
+            
+            // Remove transition class
             setTimeout(() => {
-                document.body.style.opacity = '1';
-            }, 100);
+                document.body.classList.remove('language-transition');
+                document.body.classList.add('language-transition-complete');
+                
+                // Clean up animation class
+                setTimeout(() => {
+                    document.body.classList.remove('language-transition-complete');
+                }, 500);
+            }, 300);
         }, 300);
     });
 }
 
-// Ensure language initialization happens at page load too
-window.addEventListener('load', function() {
-    const currentLang = document.documentElement.lang;
-    console.log('Ensuring correct language at page load:', currentLang);
+// Helper function to update mobile menu text
+function updateMobileMenuText(lang) {
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav a');
     
-    // If language wasn't properly set, try again
-    if (!currentLang || (currentLang !== 'en' && currentLang !== 'ar')) {
-        console.warn('Language not properly set, trying again');
-        fixLanguageDetection();
-    } else {
-        // Make sure all content is updated with the correct language
-        setLanguage(currentLang);
+    if (mobileNavLinks.length >= 5) {
+        mobileNavLinks[0].textContent = translations[lang].navHome;
+        mobileNavLinks[1].textContent = translations[lang].navAbout;
+        mobileNavLinks[2].textContent = translations[lang].navSkills;
+        mobileNavLinks[3].textContent = translations[lang].navProjects;
+        mobileNavLinks[4].textContent = translations[lang].navContact;
     }
-});
+}
 
-// Keep the existing setLanguage function, but call our improved one first
-const originalSetLanguage = setLanguage;
-setLanguage = function(lang) {
-    // Apply language immediately
-    applyLanguage(lang);
+// Fix mobile layout issues after language change
+function fixMobileLayoutAfterLanguageChange(lang) {
+    if (window.innerWidth <= 768) {
+        // Force mobile layout recalculation
+        const sections = document.querySelectorAll('section');
+        sections.forEach(section => {
+            section.style.display = 'none';
+            // Force reflow
+            void section.offsetHeight;
+            section.style.display = '';
+        });
+        
+        // Force RTL items to refresh direction
+        const rtlSensitiveItems = document.querySelectorAll('.typed-text, .hero-content, .about-text, .project-info, .form-group');
+        rtlSensitiveItems.forEach(item => {
+            if (lang === 'ar') {
+                item.style.textAlign = 'right';
+                item.style.direction = 'rtl';
+            } else {
+                item.style.textAlign = '';
+                item.style.direction = '';
+            }
+        });
+        
+        // Fix specifically the typed text in mobile RTL
+        const typedText = document.querySelector('.typed-text');
+        if (typedText) {
+            if (lang === 'ar') {
+                if (window.innerWidth <= 480) {
+                    typedText.style.textAlign = 'center';
+                } else {
+                    typedText.style.textAlign = 'right';
+                }
+            } else {
+                if (window.innerWidth <= 480) {
+                    typedText.style.textAlign = 'center';
+                } else {
+                    typedText.style.textAlign = 'left';
+                }
+            }
+        }
+    }
+}
+
+// Enhance animations for RTL support
+function resetAnimations() {
+    // Reset any active animations
+    const animatedElements = document.querySelectorAll('.animate-in');
+    animatedElements.forEach(el => {
+        el.classList.remove('animate-in');
+        void el.offsetWidth; // Force reflow
+        el.classList.add('animate-in');
+    });
     
-    // Then do the full update with the original function
-    originalSetLanguage(lang);
-};
+    // Ensure RTL animations are correct
+    const isRTL = document.documentElement.dir === 'rtl';
+    const heroContentItems = document.querySelectorAll('.hero-content > *');
+    
+    heroContentItems.forEach(item => {
+        if (isRTL) {
+            // Apply RTL-specific animation offsets
+            item.style.transformOrigin = 'right center';
+        } else {
+            // Reset to default LTR animations
+            item.style.transformOrigin = '';
+        }
+    });
+    
+    // Fix RTL-specific issues on small screens
+    if (isRTL && window.innerWidth <= 768) {
+        // Center align text on very small screens
+        if (window.innerWidth <= 480) {
+            document.querySelectorAll('.hero-content h2, .hero-content p, .typed-text').forEach(el => {
+                el.style.textAlign = 'center';
+            });
+        }
+    }
+}
 
-// ...existing code...
+// Add mobile navigation functionality
+function initMobileMenu() {
+    const menuToggle = document.querySelector('.mobile-menu-toggle');
+    const mobileNav = document.querySelector('.mobile-nav');
+    const overlay = document.querySelector('.mobile-menu-overlay');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav a');
+    
+    if (!menuToggle || !mobileNav || !overlay) return;
+    
+    // Toggle mobile menu when hamburger is clicked
+    menuToggle.addEventListener('click', function() {
+        mobileNav.classList.toggle('active');
+        overlay.classList.toggle('active');
+        
+        // Update ARIA attributes
+        const isExpanded = mobileNav.classList.contains('active');
+        menuToggle.setAttribute('aria-expanded', isExpanded);
+        
+        // Animate hamburger icon
+        const spans = this.querySelectorAll('span');
+        if (isExpanded) {
+            spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+            spans[1].style.opacity = '0';
+            spans[2].style.transform = 'rotate(-45deg) translate(7px, -7px)';
+        } else {
+            spans[0].style.transform = 'none';
+            spans[1].style.opacity = '1';
+            spans[2].style.transform = 'none';
+        }
+        
+        // Handle RTL transformations
+        if (document.documentElement.dir === 'rtl' && isExpanded) {
+            spans[0].style.transform = 'rotate(-45deg) translate(-5px, 5px)';
+            spans[2].style.transform = 'rotate(45deg) translate(-7px, -7px)';
+        }
+    });
+    
+    // Close mobile menu when overlay is clicked
+    overlay.addEventListener('click', function() {
+        mobileNav.classList.remove('active');
+        overlay.classList.remove('active');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        
+        // Reset hamburger icon
+        const spans = menuToggle.querySelectorAll('span');
+        spans[0].style.transform = 'none';
+        spans[1].style.opacity = '1';
+        spans[2].style.transform = 'none';
+    });
+    
+    // Close mobile menu when a nav link is clicked
+    mobileNavLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            mobileNav.classList.remove('active');
+            overlay.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            
+            // Reset hamburger icon
+            const spans = menuToggle.querySelectorAll('span');
+            spans[0].style.transform = 'none';
+            spans[1].style.opacity = '1';
+            spans[2].style.transform = 'none';
+        });
+    });
+}
+
+// Improved language switching with better mobile support
+function setupLanguageToggle() {
+    const langBtn = document.getElementById('language-switch');
+    if (!langBtn) {
+        console.warn('Language switch button not found, skipping setup');
+        return;
+    }
+    
+    langBtn.addEventListener('click', function() {
+        // Get current language
+        const currentLang = document.documentElement.lang;
+        console.log('Current language before toggle:', currentLang);
+        
+        // Toggle between English and Arabic
+        const newLang = currentLang === 'en' ? 'ar' : 'en';
+        console.log('Switching to language:', newLang);
+        
+        // Add transition class to body
+        document.body.classList.add('language-transition');
+        
+        // Delay the actual language change to allow for transition
+        setTimeout(() => {
+            // Apply the new language
+            applyLanguage(newLang);
+            
+            // Save preference
+            localStorage.setItem('language', newLang);
+            
+            // Update mobile menu text if visible
+            updateMobileMenuText(newLang);
+            
+            // Update icon
+            const langIcon = document.getElementById('lang-icon');
+            if (langIcon) {
+                langIcon.className = `lang-indicator lang-${newLang === 'en' ? 'ar' : 'en'}`;
+            }
+            
+            // Fix mobile-specific layout issues after language change
+            fixMobileLayoutAfterLanguageChange(newLang);
+            
+            // Remove transition class
+            setTimeout(() => {
+                document.body.classList.remove('language-transition');
+                document.body.classList.add('language-transition-complete');
+                
+                // Clean up animation class
+                setTimeout(() => {
+                    document.body.classList.remove('language-transition-complete');
+                }, 500);
+            }, 300);
+        }, 300);
+    });
+}
+
+// Helper function to update mobile menu text
+function updateMobileMenuText(lang) {
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav a');
+    
+    if (mobileNavLinks.length >= 5) {
+        mobileNavLinks[0].textContent = translations[lang].navHome;
+        mobileNavLinks[1].textContent = translations[lang].navAbout;
+        mobileNavLinks[2].textContent = translations[lang].navSkills;
+        mobileNavLinks[3].textContent = translations[lang].navProjects;
+        mobileNavLinks[4].textContent = translations[lang].navContact;
+    }
+}
+
+// Fix mobile layout issues after language change
+function fixMobileLayoutAfterLanguageChange(lang) {
+    if (window.innerWidth <= 768) {
+        // Force mobile layout recalculation
+        const sections = document.querySelectorAll('section');
+        sections.forEach(section => {
+            section.style.display = 'none';
+            // Force reflow
+            void section.offsetHeight;
+            section.style.display = '';
+        });
+        
+        // Force RTL items to refresh direction
+        const rtlSensitiveItems = document.querySelectorAll('.typed-text, .hero-content, .about-text, .project-info, .form-group');
+        rtlSensitiveItems.forEach(item => {
+            if (lang === 'ar') {
+                item.style.textAlign = 'right';
+                item.style.direction = 'rtl';
+            } else {
+                item.style.textAlign = '';
+                item.style.direction = '';
+            }
+        });
+        
+        // Fix specifically the typed text in mobile RTL
+        const typedText = document.querySelector('.typed-text');
+        if (typedText) {
+            if (lang === 'ar') {
+                if (window.innerWidth <= 480) {
+                    typedText.style.textAlign = 'center';
+                } else {
+                    typedText.style.textAlign = 'right';
+                }
+            } else {
+                if (window.innerWidth <= 480) {
+                    typedText.style.textAlign = 'center';
+                } else {
+                    typedText.style.textAlign = 'left';
+                }
+            }
+        }
+    }
+}
+
+// Enhance animations for RTL support
+function resetAnimations() {
+    // Reset any active animations
+    const animatedElements = document.querySelectorAll('.animate-in');
+    animatedElements.forEach(el => {
+        el.classList.remove('animate-in');
+        void el.offsetWidth; // Force reflow
+        el.classList.add('animate-in');
+    });
+    
+    // Ensure RTL animations are correct
+    const isRTL = document.documentElement.dir === 'rtl';
+    const heroContentItems = document.querySelectorAll('.hero-content > *');
+    
+    heroContentItems.forEach(item => {
+        if (isRTL) {
+            // Apply RTL-specific animation offsets
+            item.style.transformOrigin = 'right center';
+        } else {
+            // Reset to default LTR animations
+            item.style.transformOrigin = '';
+        }
+    });
+    
+    // Fix RTL-specific issues on small screens
+    if (isRTL && window.innerWidth <= 768) {
+        // Center align text on very small screens
+        if (window.innerWidth <= 480) {
+            document.querySelectorAll('.hero-content h2, .hero-content p, .typed-text').forEach(el => {
+                el.style.textAlign = 'center';
+            });
+        }
+    }
+}
